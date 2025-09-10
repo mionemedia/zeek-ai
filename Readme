@@ -1,0 +1,34 @@
+the charater is african american male. he's a formidable seven-foot-tall, muscular African American anime battle mage, using the head from the provided image as a reference for facial features. The character will have a powerful build, clad in stylized fantasy battlemage armor.
+
+attached is the character image were making more realistic . the character is a bald neatly trimmed gray bearded african american male so make sure the skin tone is the same for all exposed flesh. he's a formidable seven-foot-tall, muscular African American anime battle mage, using the head from the provided image as a reference for facial features. The character will have a powerful build, clad in stylized fantasy battlemage armor. Image size: Width: 3 840 pixels, Height: 2 160 pixels
+
+the character is a bald neatly trimmed GRAY FULL bearded African American male so make sure the skin tone is the same for all exposed flesh. he's a formidable seven-foot-tall, muscular African American anime battle mage, using the head from the provided image as a reference for facial features. The character will have a powerful build, clad in stylized fantasy battlemage armor. 
+
+the character is a bald neatly trimmed nearly all white gray except for a salt and pepper mustache that blends into the salt and pepper upside down triangle in his full beard bearded African American male so make sure the skin tone is the same for all exposed flesh. he's a formidable seven-foot-tall, muscular African American anime battle mage, using the head from the provided image as a reference for facial features. The character will have a powerful build, clad in stylized fantasy battlemage armor. Steps: 25, CFG scale: 3.5, Sampler: undefined, quantity: 2, draft: false, aspectRatio: 13:19, fluxUltraAspectRatio: 4, baseModel: Flux1, width: 832, height: 1216, workflow: txt2img, fluxMode: urn:air:flux1:checkpoint:civitai:618692@691639, experimental: false, disablePoi: true, Seed: 1133013824
+
+<lora:OfficialStableDiffusion/Mecha_Anime_style_v.1> "create a realistic anime image of a seven-foot-tall, muscular African American anime battle mage with a bald head, nearly ALL white gray except for a salt and pepper mustache that blends into the salt and pepper upside down satriangle in his full beard, and neatly trimmed facial hair, exuding power and authority. His rich brown skin tone is consistent across all exposed flesh. Other than a mostly bare chest, he wears stylized fantasy battlemage armor in dark metallics (black, bronze, silver) with glowing blue/violet runes and geometric patterns. The armor includes spiked shoulder plates, a segmented chest piece, and a flowing cape with magical energy trails. His intense, piercing eyes and commanding posture emphasize his formidable presence. The scene is set in a dramatic, vertical 13:19 aspect ratio with dynamic lighting and glowing magical effects. Style: 3D Anime-inspired, with exaggerated features, dramatic shadows, and vibrant energy aura."  
+
+
+"Create a anime-style image of a seven-foot-tall, muscular African American battle mage with a bald head. His facial features include a salt-and-pepper mustache and a salt-and-pepper upside-down triangle beard, with neatly trimmed facial hair. His rich brown skin tone is consistent across all exposed flesh. He exudes power and authority through his intense, piercing eyes and commanding posture. He wears stylized fantasy battlemage armor in dark metallics (black, bronze, silver), featuring glowing blue/violet runes and geometric patterns. The armor includes spiked shoulder plates, a segmented chest piece, and a flowing cape with magical energy trails. The scene is set in a dramatic, vertical 13:19 aspect ratio (e.g., 1280x960), with dynamic lighting, glowing magical effects, and a vibrant energy aura. Style: 3D anime-inspired, with exaggerated features, dramatic shadows, and high detail. Technical parameters: CFG Scale 3.5, Euler a sampler, high-resolution output."
+
+
+ <lora:OfficialStableDiffusion/realisticVisionV60B1_v51HyperVAE> "A seven-foot-tall, very muscular African American man, whose a battle mage with a bald head and a round face, His facial features include neatly trimmed full all white beard with a salt-and-pepper mustache and a salt-and-pepper upside-down triangle just below the mouth in the white beard. His rich brown skin tone is highlighted by intense, piercing eyes and a commanding, confident posture. He is dressed in modern hip-hop streetwear: a short claret colored leather jacket with silver and bronze accents, oversized gray-trimmed hoodies, high-top sneakers with Davy'S Gray soles, and layered accessories like chains and bracelets. The outfit combines dark metallic tones (Claret + Davy'S Gray + Gray, Hex Codes: #6E0A24, #565656, #767676) with bold, urban street style.   <lora:OfficialStableDiffusion/CyberRealistic_Pony>
+
+
+"A seven-foot-tall, muscular African American man with a bald head, featuring a salt-and-pepper mustache and a salt-and-pepper upside-down triangle beard. His rich brown skin tone is highlighted by intense, piercing eyes and a commanding, confident posture. He is dressed in modern hip-hop streetwear: a black leather jacket with silver and bronze accents, oversized silver-trimmed hoodies, high-top sneakers with bronze soles, and layered accessories like chains and bracelets. The outfit combines dark metallic tones (black, bronze, silver) with bold, urban street style.
+
+
+Prompt 1 (Modern, Photo-Realistic):
+A 7-foot-tall, very muscular but lean African American man with a bald head, salt-and-pepper mustache, and beard, wearing dark metallic (black, bronze, silver) hip-hop streetwear. Urban neon lighting highlights his confident stance and glowing energy trails. Photo-realistic, ultra-high-res, 13:19 ratio.
+
+Prompt 2 (Modern, Photo-Realistic):
+A 7-foot-tall, very muscular but lean African American man with a bald head, salt-and-pepper mustache, and beard, wearing dark metallic (black, bronze, silver) hip-hop streetwear. Urban neon lighting highlights his confident stance and glowing energy trails. Photo-realistic, ultra-high-res, 13:19 ratio.
+
+
+
+Prompt 1 (Anime-Style):
+A 7-foot-tall, muscular African American character with a bald head, salt-and-pepper mustache, and beard, clad in dark metallic (black, bronze, silver) fantasy armor. Dynamic 13:19 scene with glowing energy. 3D anime style, high detail, ultra-res.
+
+
+add more detail to the prompt about the beard. "His facial features include neatly trimmed full all white beard with a salt-and-pepper mustache and a salt-and-pepper upside-down triangle just below the mouth in the white beard"
+
