@@ -340,17 +340,150 @@ function buildProviderConfig(providerName) {
     `;
 }
 
-// New: Work - Team Alpha
-function renderWorkTeam() {
-    const app = document.getElementById('app');
-    app.innerHTML = `
-        ${buildSidebar('/work-team')}
-        <div class="main-content">
-            <h1>Work - Team Alpha</h1>
-            <div class="feature-card"><h3>Projects</h3><p>Team project list and status (UI stub).</p></div>
-            <div class="feature-card"><h3>Activity</h3><p>Recent team activity feed (UI stub).</p></div>
-        </div>
-    `;
+// --- Personal Notes helpers ---
+const NOTES_STORE_KEY = 'personal:notes:store';
+const NOTES_CURRENT_KEY = 'personal:notes:current';
+
+function debounce(fn, wait) {
+    let t;
+    return function(...args) {
+        clearTimeout(t);
+        t = setTimeout(() => fn.apply(this, args), wait);
+    };
+}
+
+function genNoteId() { return 'note-' + Date.now(); }
+
+function getNotesStore() {
+    try {
+        const raw = localStorage.getItem(NOTES_STORE_KEY);
+        const parsed = raw ? JSON.parse(raw) : null;
+        return parsed && typeof parsed === 'object' ? parsed : { notes: {} };
+    } catch { return { notes: {} }; }
+}
+function setNotesStore(store) { try { localStorage.setItem(NOTES_STORE_KEY, JSON.stringify(store)); } catch {} }
+function getCurrentNoteId() { return localStorage.getItem(NOTES_CURRENT_KEY) || ''; }
+function setCurrentNoteId(id) { try { localStorage.setItem(NOTES_CURRENT_KEY, id); } catch {} }
+
+function ensureNotesStore() {
+    let store = getNotesStore();
+    if (!store || typeof store !== 'object') store = { notes: {} };
+    if (!store.notes) store.notes = {};
+    let current = getCurrentNoteId();
+    // Migrate legacy single-note value if present
+    try {
+        if (!Object.keys(store.notes).length) {
+            const legacy = localStorage.getItem('personal:notes');
+            if (legacy != null) {
+                const id = genNoteId();
+                store.notes[id] = { id, title: 'My Note', content: legacy || '', updatedAt: Date.now() };
+                current = id;
+                setNotesStore(store);
+                localStorage.removeItem('personal:notes');
+            }
+        }
+    } catch {}
+    if (!current) {
+        const id = genNoteId();
+        store.notes[id] = { id, title: 'My Note', content: '', updatedAt: Date.now() };
+        current = id;
+        setNotesStore(store);
+    }
+    setCurrentNoteId(current);
+}
+
+function populateNotesSelect() {
+    const sel = document.getElementById('notes-select');
+    if (!sel) return;
+    const store = getNotesStore();
+    const current = getCurrentNoteId();
+    sel.innerHTML = '';
+    Object.values(store.notes).forEach(n => {
+        const opt = document.createElement('option');
+        opt.value = n.id; opt.textContent = n.title || 'Untitled';
+        if (n.id === current) opt.selected = true;
+        sel.appendChild(opt);
+    });
+}
+
+function currentNote() { const store = getNotesStore(); const id = getCurrentNoteId(); return store.notes[id] || null; }
+
+function savePersonalNotes() {
+    try {
+        const ta = document.getElementById('personal-notes');
+        if (!ta) return;
+        const store = getNotesStore();
+        const id = getCurrentNoteId();
+        if (!id) return;
+        const note = store.notes[id] || { id, title: 'My Note', content: '' };
+        note.content = ta.value || '';
+        note.updatedAt = Date.now();
+        store.notes[id] = note;
+        setNotesStore(store);
+        // Update status and reflect possibly updated labels
+        const s = document.getElementById('notes-status');
+        if (s) s.textContent = 'Saved at ' + new Date(note.updatedAt).toLocaleTimeString();
+        populateNotesSelect();
+    } catch {}
+}
+
+function loadPersonalNotes() {
+    try {
+        const ta = document.getElementById('personal-notes');
+        if (!ta) return;
+        const note = currentNote();
+        ta.value = (note && note.content) || '';
+        const s = document.getElementById('notes-status');
+        if (s) s.textContent = note && note.updatedAt ? ('Saved at ' + new Date(note.updatedAt).toLocaleTimeString()) : 'Saved';
+        populateNotesSelect();
+    } catch {}
+}
+
+function createNewNote() {
+    const store = getNotesStore();
+    const id = genNoteId();
+    // Generate a friendly title
+    const count = Object.keys(store.notes).length + 1;
+    const title = 'Untitled ' + count;
+    store.notes[id] = { id, title, content: '', updatedAt: Date.now() };
+    setNotesStore(store);
+    return id;
+}
+
+function renameCurrentNote(newTitle) {
+    if (!newTitle) return;
+    const store = getNotesStore();
+    const id = getCurrentNoteId();
+    if (!id || !store.notes[id]) return;
+    store.notes[id].title = newTitle;
+    store.notes[id].updatedAt = Date.now();
+    setNotesStore(store);
+    populateNotesSelect();
+}
+
+function deleteCurrentNote() {
+    const store = getNotesStore();
+    const id = getCurrentNoteId();
+    if (!id || !store.notes[id]) return;
+    delete store.notes[id];
+    let nextId = Object.keys(store.notes)[0];
+    if (!nextId) { nextId = createNewNote(); }
+    setNotesStore(store);
+    setCurrentNoteId(nextId);
+}
+
+function exportCurrentNote() {
+    try {
+        const n = currentNote();
+        if (!n) return;
+        const blob = new Blob([n.content || ''], { type: 'text/plain;charset=utf-8' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        const base = (n.title || 'note').replace(/[^a-z0-9-_\. ]/gi, '_');
+        a.href = url; a.download = base + '.txt';
+        document.body.appendChild(a); a.click(); a.remove();
+        setTimeout(() => URL.revokeObjectURL(url), 1000);
+    } catch {}
 }
 
 // New: Personal
@@ -360,14 +493,118 @@ function renderPersonal() {
         ${buildSidebar('/personal')}
         <div class="main-content">
             <h1>Personal</h1>
-            <div class="feature-card"><h3>My Notes</h3><p>Personal items and quick links (UI stub).</p></div>
+            <div class="feature-card">
+                <h3>My Notes</h3>
+                <div style="display:flex;gap:8px;align-items:center;margin:6px 0;flex-wrap:wrap">
+                    <label for="notes-select" style="font-size:12px;color:var(--muted-text)">Note</label>
+                    <select id="notes-select" style="background:var(--card-bg);color:var(--text-color);border:1px solid var(--border-color);border-radius:6px;padding:4px 6px;min-width:180px"></select>
+                    <button class="new-btn notes-new-btn" title="Create new note">New</button>
+                    <button class="new-btn notes-rename-btn" title="Rename note" style="background:#37474f">Rename</button>
+                    <button class="new-btn notes-delete-btn" title="Delete note" style="background:#b71c1c">Delete</button>
+                    <button class="new-btn notes-upload-btn" title="Upload text into note" style="background:#455a64">Upload</button>
+                    <button class="new-btn notes-export-btn" title="Export as .txt" style="background:#2e7d32">Export</button>
+                    <button class="new-btn notes-save-btn" title="Save notes">Save</button>
+                    <span id="notes-status" style="font-size:12px;color:var(--muted-text)">Saved</span>
+                </div>
+                <textarea id="personal-notes" rows="12" style="width:100%;resize:vertical;background:var(--card-bg);color:var(--text-color);border:1px solid var(--border-color);border-radius:8px;padding:10px;line-height:1.5" placeholder="Write anything…"></textarea>
+                <input type="file" id="notes-upload-input" accept=".txt,.md,.markdown,.csv,.json" style="display:none" />
+            </div>
         </div>
     `;
+    // Initialize store and UI
+    try { ensureNotesStore(); populateNotesSelect(); loadPersonalNotes(); } catch {}
+    const notesInput = document.getElementById('personal-notes');
+    const notesSaveBtn = document.querySelector('.notes-save-btn');
+    const notesNewBtn = document.querySelector('.notes-new-btn');
+    const notesRenameBtn = document.querySelector('.notes-rename-btn');
+    const notesDeleteBtn = document.querySelector('.notes-delete-btn');
+    const notesExportBtn = document.querySelector('.notes-export-btn');
+    const notesUploadBtn = document.querySelector('.notes-upload-btn');
+    const notesUploadInput = document.getElementById('notes-upload-input');
+    const notesSelect = document.getElementById('notes-select');
+    const notesStatus = document.getElementById('notes-status');
+    const saveNotesDebounced = debounce(savePersonalNotes, 400);
+    if (notesInput) notesInput.addEventListener('input', () => {
+        if (notesStatus) notesStatus.textContent = 'Saving…';
+        saveNotesDebounced();
+    });
+    if (notesSaveBtn) notesSaveBtn.addEventListener('click', () => {
+        savePersonalNotes();
+        if (notesStatus) notesStatus.textContent = 'Saved';
+    });
+    if (notesNewBtn) notesNewBtn.addEventListener('click', () => {
+        const id = createNewNote();
+        setCurrentNoteId(id);
+        populateNotesSelect();
+        loadPersonalNotes();
+        if (notesStatus) notesStatus.textContent = 'Saved';
+    });
+    if (notesRenameBtn) notesRenameBtn.addEventListener('click', () => {
+        const n = currentNote();
+        const next = prompt('Rename note', (n && n.title) || 'Untitled');
+        if (next && next.trim()) { renameCurrentNote(next.trim()); }
+    });
+    if (notesDeleteBtn) notesDeleteBtn.addEventListener('click', () => {
+        const n = currentNote();
+        if (!n) return;
+        if (confirm(`Delete note "${n.title || 'Untitled'}"? This cannot be undone.`)) {
+            deleteCurrentNote();
+            populateNotesSelect();
+            loadPersonalNotes();
+        }
+    });
+    if (notesExportBtn) notesExportBtn.addEventListener('click', () => exportCurrentNote());
+    if (notesSelect) notesSelect.addEventListener('change', () => {
+        // Save current before switching
+        savePersonalNotes();
+        const id = notesSelect.value;
+        setCurrentNoteId(id);
+        loadPersonalNotes();
+        if (notesStatus) notesStatus.textContent = 'Saved';
+    });
+    if (notesUploadBtn && notesUploadInput) {
+        notesUploadBtn.addEventListener('click', () => notesUploadInput.click());
+        notesUploadInput.addEventListener('change', async () => {
+            const files = Array.from(notesUploadInput.files || []);
+            if (!files.length || !notesInput) return;
+            for (const f of files) {
+                try {
+                    const text = await f.text();
+                    notesInput.value += (notesInput.value ? "\n\n" : "") + text;
+                } catch {}
+            }
+            savePersonalNotes();
+            if (notesStatus) notesStatus.textContent = 'Saved';
+            notesUploadInput.value = '';
+        });
+    }
+    // Drag & drop support on textarea
+    if (notesInput) {
+        const prevent = (e) => { e.preventDefault(); e.stopPropagation(); };
+        ['dragenter','dragover','dragleave','drop'].forEach(ev => notesInput.addEventListener(ev, prevent));
+        notesInput.addEventListener('drop', async (e) => {
+            const dt = e.dataTransfer;
+            if (!dt || !dt.files || !dt.files.length) return;
+            for (const f of Array.from(dt.files)) {
+                try {
+                    const text = await f.text();
+                    notesInput.value += (notesInput.value ? "\n\n" : "") + text;
+                } catch {}
+            }
+            savePersonalNotes();
+            if (notesStatus) notesStatus.textContent = 'Saved';
+        });
+    }
+    // Autosave on route changes and when the window is about to close
+    window.addEventListener('hashchange', savePersonalNotes);
+    window.addEventListener('beforeunload', savePersonalNotes);
+    document.addEventListener('visibilitychange', () => { if (document.hidden) savePersonalNotes(); });
 }
 
 // New: Split Chats view (two panes)
 function renderSplitChats() {
     const app = document.getElementById('app');
+    // ... (rest of the code remains the same)
     app.innerHTML = `
         ${buildSidebar('/split-chats')}
         <div class="main-content">
@@ -392,7 +629,6 @@ document.addEventListener('DOMContentLoaded', () => {
         '/model-hub-online': renderModelHubOnline,
         // New sections aligned with Studio
         '/personas': renderPersonas,
-        '/work-team': renderWorkTeam,
         '/personal': renderPersonal,
         '/split-chats': renderSplitChats,
         '/prompts': renderPrompts,
@@ -483,6 +719,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 e.preventDefault();
                 const href = navA.getAttribute('href');
                 if (href) {
+                    // Autosave notes before navigating away
+                    try { savePersonalNotes(); } catch {}
                     if (window.location.hash !== href) {
                         window.location.hash = href;
                     }
@@ -503,6 +741,20 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
                 return;
             }
+
+            // Personal Notes: global delegation for reliability
+            const notesSave = e.target.closest && e.target.closest('.notes-save-btn');
+            if (notesSave) { e.preventDefault(); try { savePersonalNotes(); } catch {}; return; }
+            const notesNew = e.target.closest && e.target.closest('.notes-new-btn');
+            if (notesNew) { e.preventDefault(); try { const id = createNewNote(); setCurrentNoteId(id); populateNotesSelect(); loadPersonalNotes(); } catch {}; return; }
+            const notesRename = e.target.closest && e.target.closest('.notes-rename-btn');
+            if (notesRename) { e.preventDefault(); try { const n = currentNote(); const next = prompt('Rename note', (n && n.title) || 'Untitled'); if (next && next.trim()) renameCurrentNote(next.trim()); } catch {}; return; }
+            const notesDelete = e.target.closest && e.target.closest('.notes-delete-btn');
+            if (notesDelete) { e.preventDefault(); try { const n = currentNote(); if (n && confirm(`Delete note "${n.title || 'Untitled'}"? This cannot be undone.`)) { deleteCurrentNote(); populateNotesSelect(); loadPersonalNotes(); } } catch {}; return; }
+            const notesExport = e.target.closest && e.target.closest('.notes-export-btn');
+            if (notesExport) { e.preventDefault(); try { exportCurrentNote(); } catch {}; return; }
+            const notesUpload = e.target.closest && e.target.closest('.notes-upload-btn');
+            if (notesUpload) { e.preventDefault(); const up = document.getElementById('notes-upload-input'); if (up) up.click(); return; }
             // Normalize any legacy Model Hub links to the online page
             const legacyModelHub = e.target.closest('a[href="#/model-hub"]');
             if (legacyModelHub) {

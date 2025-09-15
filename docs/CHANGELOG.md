@@ -9,6 +9,8 @@ All notable changes to this project will be documented here.
 - Unify sidebars across pages using global `buildSidebar()` to keep navigation consistent.
 - Fix Model Hub pages to use global sidebar so `Personal` and other links do not disappear.
 - Remove `Work - Team Alpha` from the navigation.
+- Personal tab: add simple notes app with multi-note support (New, select), autosave on input/nav/close, Upload and drag-and-drop text import, Rename/Delete actions, Export current note as .txt, and last-saved timestamp.
+- Personal tab: strengthen button handling with global click delegation for Save/New/Rename/Delete/Export/Upload.
 
 ## [0.1.2] - 2025-09-15
 
