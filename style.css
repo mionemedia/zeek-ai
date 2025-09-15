@@ -8,6 +8,8 @@
     --accent: #4DABF7;
     --accent-weak: #23364B;
     --danger: #EF4444;
+    --borderColor-default: #2E3D52;
+    --color-border-default: #2E3D52;
 }
 
 body {

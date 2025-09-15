@@ -344,6 +344,70 @@ function buildProviderConfig(providerName) {
 const NOTES_STORE_KEY = 'personal:notes:store';
 const NOTES_CURRENT_KEY = 'personal:notes:current';
 
+// --- Agents Catalog (seeded from https://github.com/ashishpatel26/500-AI-Agents-Projects ) ---
+// Minimal starter set; expand by adding entries below. Each agent maps to a category and a logo URL.
+const AGENTS_CATEGORIES = [
+    'Productivity', 'Coding', 'Design', 'Image/GenAI', 'Voice/Audio', 'RPA/Automation', 'Education', 'Research', 'Data/Analytics'
+];
+const AGENTS_CATALOG = [
+    {
+        name: 'Code Assistant',
+        category: 'Coding',
+        description: 'AI pair programmer for code generation, explanation, and refactoring.',
+        repo: 'https://github.com/ashishpatel26/500-AI-Agents-Projects',
+        logo: 'https://cdn.simpleicons.org/github/FFFFFF'
+    },
+    {
+        name: 'Research Analyst',
+        category: 'Research',
+        description: 'Web research, summarization, and citation drafting agent.',
+        repo: 'https://github.com/ashishpatel26/500-AI-Agents-Projects',
+        logo: 'https://cdn.simpleicons.org/readthedocs/FFFFFF'
+    },
+    {
+        name: 'Image Designer',
+        category: 'Image/GenAI',
+        description: 'Prompt-to-image generation assistant with style presets.',
+        repo: 'https://github.com/ashishpatel26/500-AI-Agents-Projects',
+        logo: 'https://cdn.simpleicons.org/adobecreativecloud/FFFFFF'
+    },
+    {
+        name: 'Voice Scribe',
+        category: 'Voice/Audio',
+        description: 'Speech-to-text and text-to-speech workflows with diarization.',
+        repo: 'https://github.com/ashishpatel26/500-AI-Agents-Projects',
+        logo: 'https://cdn.simpleicons.org/microsoftextra/FFFFFF'
+    },
+    {
+        name: 'Task Automator',
+        category: 'RPA/Automation',
+        description: 'Desktop/web automation with natural language commands.',
+        repo: 'https://github.com/ashishpatel26/500-AI-Agents-Projects',
+        logo: 'https://cdn.simpleicons.org/powershell/FFFFFF'
+    },
+    {
+        name: 'Study Buddy',
+        category: 'Education',
+        description: 'Interactive tutor that explains topics with examples and quizzes.',
+        repo: 'https://github.com/ashishpatel26/500-AI-Agents-Projects',
+        logo: 'https://cdn.simpleicons.org/googleclassroom/FFFFFF'
+    },
+    {
+        name: 'Productivity Planner',
+        category: 'Productivity',
+        description: 'Daily planning, reminders, and project breakdowns.',
+        repo: 'https://github.com/ashishpatel26/500-AI-Agents-Projects',
+        logo: 'https://cdn.simpleicons.org/todoist/FFFFFF'
+    },
+    {
+        name: 'Data Wrangler',
+        category: 'Data/Analytics',
+        description: 'CSV/JSON exploration, charting, and QA over data.',
+        repo: 'https://github.com/ashishpatel26/500-AI-Agents-Projects',
+        logo: 'https://cdn.simpleicons.org/plotly/FFFFFF'
+    }
+];
+
 function debounce(fn, wait) {
     let t;
     return function(...args) {
@@ -2133,48 +2197,57 @@ function renderWorkflows() {
 
 function renderPrompts() {
     const app = document.getElementById('app');
+    const renderAgents = (q = '', cat = 'All') => {
+        const term = (q || '').toLowerCase();
+        const list = AGENTS_CATALOG.filter(a => {
+            const matchCat = (cat === 'All') || a.category === cat;
+            const matchQ = !term || a.name.toLowerCase().includes(term) || a.description.toLowerCase().includes(term) || a.category.toLowerCase().includes(term);
+            return matchCat && matchQ;
+        });
+        if (!list.length) return '<div class="feature-card"><p>No agents match your query.</p></div>';
+        const cards = list.map(a => `
+            <div class="agent-card" data-name="${a.name.replace(/\"/g,'&quot;')}">
+                <div style="display:flex;align-items:center;justify-content:space-between;gap:8px">
+                    <div style="font-weight:600">${a.name}</div>
+                    <span class="chip" style="font-size:11px;border:1px solid var(--border-color);border-radius:999px;padding:2px 6px;color:var(--muted-text)">${a.category}</span>
+                </div>
+                <p style="margin:8px 0 0 0;color:var(--muted-text);font-size:13px">${a.description}</p>
+                ${a.repo ? `<div style=\"margin-top:8px\"><a href=\"${a.repo}\" target=\"_blank\" style=\"font-size:12px\">Source</a></div>` : ''}
+            </div>
+        `).join('');
+        return `<div class="agents-grid">${cards}</div>`;
+    };
+    const cats = ['All', ...AGENTS_CATEGORIES];
     app.innerHTML = `
         ${buildSidebar('/prompts')}
         <div class="main-content">
             <div class="prompts-library">
                 <h1>Prompts Library</h1>
-                <div class="prompts-actions">
-                    <input type="text" placeholder="Search prompts...">
+                <div class="prompts-actions" style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:8px">
+                    <input id="agents-search" type="text" placeholder="Search agents..." style="flex:1;min-width:220px">
+                    <select id="agents-category" style="background:var(--card-bg);color:var(--text-color);border:1px solid var(--border-color);border-radius:6px;padding:4px 6px">
+                        ${cats.map(c => `<option value="${c}">${c}</option>`).join('')}
+                    </select>
                     <button class="new-prompt-btn">New Prompt</button>
                 </div>
-                <div class="prompt-card">
-                    <div class="prompt-info">
-                        <h3>Creative Writing Starter</h3>
-                        <p>A prompt to kickstart creative writing sessions.</p>
-                        <div class="tags">
-                            <span>creative</span>
-                            <span>writing</span>
-                        </div>
-                    </div>
-                    <div class="prompt-buttons">
-                        <button>Save</button>
-                        <button>Edit</button>
-                        <button>Share</button>
-                    </div>
-                </div>
-                 <div class="prompt-card">
-                    <div class="prompt-info">
-                        <h3>Technical Question</h3>
-                        <p>A prompt to ask a technical question to an AI.</p>
-                        <div class="tags">
-                            <span>technical</span>
-                            <span>qa</span>
-                        </div>
-                    </div>
-                    <div class="prompt-buttons">
-                        <button>Save</button>
-                        <button>Edit</button>
-                        <button>Share</button>
-                    </div>
+                <div class="feature-card">
+                    <h3 style="margin-top:0">Agents Catalog</h3>
+                    <div id="agents-list" style="margin-top:8px">${renderAgents()}</div>
                 </div>
             </div>
         </div>
+        <style>
+            .agents-grid { display:grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap:10px; }
+            .agent-card { border:1px solid var(--border-color); border-radius:8px; padding:10px; background:var(--card-bg); }
+            .agent-card:hover { outline: 2px solid #42a5f5; }
+        </style>
     `;
+    const search = document.getElementById('agents-search');
+    const sel = document.getElementById('agents-category');
+    const list = document.getElementById('agents-list');
+    const rerender = () => { list.innerHTML = renderAgents(search.value, sel.value); };
+    if (search) search.addEventListener('input', debounce(rerender, 200));
+    if (sel) sel.addEventListener('change', rerender);
 }
 
 function renderToolbox() {
