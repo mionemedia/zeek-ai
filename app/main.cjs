@@ -1,10 +1,11 @@
 // Electron main process entry (CommonJS)
 // Spawns FastAPI backend on 127.0.0.1 and loads the renderer (web/index.html)
 
-const { app, BrowserWindow } = require('electron');
+const { app, BrowserWindow, ipcMain, dialog } = require('electron');
 const { spawn } = require('node:child_process');
 const path = require('node:path');
 const fs = require('node:fs');
+const fsp = require('node:fs/promises');
 
 let win = null;
 const services = [];
@@ -98,4 +99,27 @@ app.on('window-all-closed', () => {
   });
   log('app quitting');
   app.quit();
+});
+
+// IPC: Native Save As for Personal notes
+ipcMain.handle('note:saveAs', async (_event, params) => {
+  try {
+    const { content, filename } = params || { content: '' };
+    log(`[main] note:saveAs requested filename=${filename || ''}`);
+    const result = await dialog.showSaveDialog(win || null, {
+      title: 'Save Note As',
+      defaultPath: filename || 'note.txt',
+      filters: [
+        { name: 'Text Files', extensions: ['txt'] },
+        { name: 'All Files', extensions: ['*'] }
+      ]
+    });
+    if (result.canceled || !result.filePath) return { ok: false, canceled: true };
+    await fsp.writeFile(result.filePath, content ?? '', { encoding: 'utf-8' });
+    log(`[main] note:saveAs saved path=${result.filePath}`);
+    return { ok: true, path: result.filePath };
+  } catch (e) {
+    log(`[main] note:saveAs error err=${e && e.message ? e.message : String(e)}`);
+    return { ok: false, error: e && e.message ? e.message : 'Failed' };
+  }
 });

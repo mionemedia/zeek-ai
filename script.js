@@ -514,9 +514,9 @@ function renderPersonal() {
                     <button class="new-btn notes-rename-btn" title="Rename note" style="background:#37474f">Rename</button>
                     <button class="new-btn notes-delete-btn" title="Delete note" style="background:#b71c1c">Delete</button>
                     <button class="new-btn notes-upload-btn" title="Upload text into note" style="background:#455a64">Upload</button>
-                    <button class="new-btn notes-export-btn" title="Export as .txt" style="background:#2e7d32">Export</button>
                     <button class="new-btn notes-save-btn" title="Save notes">Save</button>
                     <span id="notes-status" style="font-size:12px;color:var(--muted-text)">Saved</span>
+                    <span id="ipc-status" style="font-size:11px;color:#90a4ae;border:1px solid var(--border-color);border-radius:999px;padding:2px 6px">IPC?</span>
                 </div>
                 <textarea id="personal-notes" rows="12" style="width:100%;resize:vertical;background:var(--card-bg);color:var(--text-color);border:1px solid var(--border-color);border-radius:8px;padding:10px;line-height:1.5" placeholder="Write anything…"></textarea>
                 <input type="file" id="notes-upload-input" accept=".txt,.md,.markdown,.csv,.json" style="display:none" />
@@ -530,12 +530,21 @@ function renderPersonal() {
     const notesNewBtn = document.querySelector('.notes-new-btn');
     const notesRenameBtn = document.querySelector('.notes-rename-btn');
     const notesDeleteBtn = document.querySelector('.notes-delete-btn');
-    const notesExportBtn = document.querySelector('.notes-export-btn');
     const notesUploadBtn = document.querySelector('.notes-upload-btn');
     const notesUploadInput = document.getElementById('notes-upload-input');
     const notesSelect = document.getElementById('notes-select');
     const notesStatus = document.getElementById('notes-status');
     const saveNotesDebounced = debounce(savePersonalNotes, 400);
+    // Initialize IPC status chip
+    try {
+        const chip = document.getElementById('ipc-status');
+        const ok = !!(window.zeek && typeof window.zeek.saveAsNote === 'function');
+        if (chip) {
+            chip.textContent = ok ? 'IPC OK' : 'IPC off';
+            chip.style.color = ok ? '#2e7d32' : '#ef5350';
+            chip.title = ok ? 'Native Save As available' : 'Native Save As unavailable';
+        }
+    } catch {}
     if (notesInput) notesInput.addEventListener('input', () => {
         if (notesStatus) notesStatus.textContent = 'Saving…';
         saveNotesDebounced();
@@ -565,7 +574,6 @@ function renderPersonal() {
             loadPersonalNotes();
         }
     });
-    if (notesExportBtn) notesExportBtn.addEventListener('click', () => exportCurrentNote());
     if (notesSelect) notesSelect.addEventListener('change', () => {
         // Save current before switching
         savePersonalNotes();
@@ -777,8 +785,8 @@ document.addEventListener('DOMContentLoaded', () => {
                             }
                         }).catch(() => { try { toast('Save failed', 'error'); } catch {} });
                     } else {
-                        // Fallback: rely on Export button if preload not present
-                        try { toast('Saved locally. Use Export to download.', 'info'); } catch {}
+                        // Fallback: perform quick Export download if native Save As is unavailable
+                        try { exportCurrentNote(); } catch { try { toast('Save failed', 'error'); } catch {} }
                     }
                 } catch {}
                 return;
@@ -789,8 +797,6 @@ document.addEventListener('DOMContentLoaded', () => {
             if (notesRename) { e.preventDefault(); try { const n = currentNote(); const next = prompt('Rename note', (n && n.title) || 'Untitled'); if (next && next.trim()) renameCurrentNote(next.trim()); } catch {}; return; }
             const notesDelete = e.target.closest && e.target.closest('.notes-delete-btn');
             if (notesDelete) { e.preventDefault(); try { const n = currentNote(); if (n && confirm(`Delete note "${n.title || 'Untitled'}"? This cannot be undone.`)) { deleteCurrentNote(); populateNotesSelect(); loadPersonalNotes(); } } catch {}; return; }
-            const notesExport = e.target.closest && e.target.closest('.notes-export-btn');
-            if (notesExport) { e.preventDefault(); try { exportCurrentNote(); } catch {}; return; }
             const notesUpload = e.target.closest && e.target.closest('.notes-upload-btn');
             if (notesUpload) { e.preventDefault(); const up = document.getElementById('notes-upload-input'); if (up) up.click(); return; }
             // Normalize any legacy Model Hub links to the online page
@@ -1431,10 +1437,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     if (btn) btn.dispatchEvent(new Event('click', { bubbles: true }));
                 } catch {}
             }
-            if (e.key.toLowerCase() === 'e') {
-                e.preventDefault();
-                try { exportCurrentNote(); } catch {}
-            }
+            // Reserved: additional shortcuts can be added here
         });
     }
 

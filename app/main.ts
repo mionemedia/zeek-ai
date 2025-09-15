@@ -34,16 +34,19 @@ async function waitForHealth(url: string, timeoutMs = 15000) {
  * - IPC patterns: https://www.electronjs.org/docs/latest/tutorial/ipc
  */
 async function createWindow() {
-  // Spawn FastAPI backend on 127.0.0.1
+  // Spawn FastAPI backend on 127.0.0.1 (match legacy CJS behavior for reliability)
   const corePort = process.env.CORE_PORT || '8000';
   const py = process.env.PYTHON || 'python';
-  const backendEntry = path.join(process.cwd(), 'backend', 'app', 'main.py');
+  const backendCwd = path.join(process.cwd(), 'backend');
+  const backendEntry = path.join(backendCwd, 'app', 'main.py');
+  console.log('[main] spawning backend:', py, backendEntry);
   const core = spawn(py, [backendEntry], {
-    env: { ...process.env, PORT: corePort },
-    stdio: 'inherit'
+    env: { ...process.env, PORT: corePort, PYTHONPATH: backendCwd },
+    stdio: 'inherit',
+    cwd: backendCwd
   });
   services.push({ name: 'core', proc: core, port: Number(corePort) });
-
+  console.log('[main] waiting for health http://127.0.0.1:' + corePort + '/health');
   await waitForHealth(`http://127.0.0.1:${corePort}/health`);
 
   // Renderer is sandboxed; expose minimal API via preload only
@@ -80,7 +83,8 @@ app.on('window-all-closed', () => {
 ipcMain.handle('note:saveAs', async (_event: any, params: { content: string; filename?: string }) => {
   try {
     const { content, filename } = params || { content: '' } as any;
-    const result = await dialog.showSaveDialog({
+    console.log('[main] note:saveAs requested', { filename });
+    const result = await dialog.showSaveDialog(win ?? null, {
       title: 'Save Note As',
       defaultPath: filename || 'note.txt',
       filters: [
@@ -90,8 +94,10 @@ ipcMain.handle('note:saveAs', async (_event: any, params: { content: string; fil
     });
     if (result.canceled || !result.filePath) return { ok: false, canceled: true };
     await writeFile(result.filePath, content ?? '', { encoding: 'utf-8' });
+    console.log('[main] note:saveAs saved', result.filePath);
     return { ok: true, path: result.filePath };
   } catch (e: any) {
+    console.error('[main] note:saveAs error', e?.message || e);
     return { ok: false, error: e?.message || 'Failed' };
   }
 });
