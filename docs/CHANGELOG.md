@@ -11,6 +11,8 @@ All notable changes to this project will be documented here.
 - Remove `Work - Team Alpha` from the navigation.
 - Personal tab: add simple notes app with multi-note support (New, select), autosave on input/nav/close, Upload and drag-and-drop text import, Rename/Delete actions, Export current note as .txt, and last-saved timestamp.
 - Personal tab: strengthen button handling with global click delegation for Save/New/Rename/Delete/Export/Upload.
+- Desktop: default renderer bundle to `root` (desktop UI). `UI_BUNDLE` env can override, but desktop defaults no longer require it.
+- Personal tab: Save and Export now use native OS Save As dialog via Electron IPC; added shortcuts: Ctrl+S (Save), Ctrl+E (Export).
 
 ## [0.1.2] - 2025-09-15
 

@@ -476,6 +476,18 @@ function exportCurrentNote() {
     try {
         const n = currentNote();
         if (!n) return;
+        // Prefer native Save As via preload
+        if (window.zeek && typeof window.zeek.saveAsNote === 'function') {
+            window.zeek.saveAsNote({ content: n.content || '', filename: (n.title || 'note') + '.txt' })
+                .then((res) => {
+                    if (res && res.ok && res.path) { try { toast('Saved to ' + res.path, 'success'); } catch {} }
+                    else if (res && res.canceled) { try { toast('Save canceled'); } catch {} }
+                    else { try { toast('Save failed', 'error'); } catch {} }
+                })
+                .catch(() => { try { toast('Save failed', 'error'); } catch {} });
+            return;
+        }
+        // Fallback to browser download if preload unavailable
         const blob = new Blob([n.content || ''], { type: 'text/plain;charset=utf-8' });
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
@@ -744,7 +756,33 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // Personal Notes: global delegation for reliability
             const notesSave = e.target.closest && e.target.closest('.notes-save-btn');
-            if (notesSave) { e.preventDefault(); try { savePersonalNotes(); } catch {}; return; }
+            if (notesSave) {
+                e.preventDefault();
+                try {
+                    // Always persist locally first
+                    savePersonalNotes();
+                    // If native Save As is available, prompt user where to save
+                    const ta = document.getElementById('personal-notes');
+                    const note = (typeof currentNote === 'function') ? currentNote() : null;
+                    const title = (note && note.title) ? note.title : 'note';
+                    const content = ta && ta.value ? ta.value : (note && note.content) || '';
+                    if (window.zeek && typeof window.zeek.saveAsNote === 'function') {
+                        window.zeek.saveAsNote({ content, filename: title + '.txt' }).then((res) => {
+                            if (res && res.ok && res.path) {
+                                try { toast('Saved to ' + res.path, 'success'); } catch {}
+                            } else if (res && res.canceled) {
+                                try { toast('Save canceled'); } catch {}
+                            } else {
+                                try { toast('Save failed', 'error'); } catch {}
+                            }
+                        }).catch(() => { try { toast('Save failed', 'error'); } catch {} });
+                    } else {
+                        // Fallback: rely on Export button if preload not present
+                        try { toast('Saved locally. Use Export to download.', 'info'); } catch {}
+                    }
+                } catch {}
+                return;
+            }
             const notesNew = e.target.closest && e.target.closest('.notes-new-btn');
             if (notesNew) { e.preventDefault(); try { const id = createNewNote(); setCurrentNoteId(id); populateNotesSelect(); loadPersonalNotes(); } catch {}; return; }
             const notesRename = e.target.closest && e.target.closest('.notes-rename-btn');
@@ -1377,6 +1415,25 @@ document.addEventListener('DOMContentLoaded', () => {
                 e.preventDefault();
                 const btn = input.closest('.composer-row')?.querySelector('.send-btn');
                 handleSend(btn || input.closest('.composer-row'));
+            }
+        });
+
+        // Editor shortcuts: Ctrl+S / Ctrl+E on Personal page
+        document.addEventListener('keydown', (e) => {
+            const hash = window.location.hash || '#/';
+            if (hash !== '#/personal') return;
+            if (!e.ctrlKey && !e.metaKey) return;
+            if (e.key.toLowerCase() === 's') {
+                e.preventDefault();
+                try {
+                    // trigger same as Save button
+                    const btn = document.querySelector('.notes-save-btn');
+                    if (btn) btn.dispatchEvent(new Event('click', { bubbles: true }));
+                } catch {}
+            }
+            if (e.key.toLowerCase() === 'e') {
+                e.preventDefault();
+                try { exportCurrentNote(); } catch {}
             }
         });
     }
