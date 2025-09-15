@@ -6,7 +6,9 @@ All notable changes to this project will be documented here.
 
 ## [Unreleased]
 
-- Pending
+- Unify sidebars across pages using global `buildSidebar()` to keep navigation consistent.
+- Fix Model Hub pages to use global sidebar so `Personal` and other links do not disappear.
+- Remove `Work - Team Alpha` from the navigation.
 
 ## [0.1.2] - 2025-09-15
 

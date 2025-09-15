@@ -14,7 +14,7 @@ function buildSidebar(activeRoute) {
             <nav class="sidebar-nav">
                 <ul>
                     <li><a href="#/" ${is('/') }><i class="material-icons">chat_bubble_outline</i> Conversations</a></li>
-                    <li><a href="#/work-team" ${is('/work-team')}><i class="material-icons">work_outline</i> Work - Team Alpha</a></li>
+                    
                     <li><a href="#/personal" ${is('/personal')}><i class="material-icons">person</i> Personal</a></li>
                     <li><a href="#/features" ${is('/features')}><i class="material-icons">star_outline</i> Features</a></li>
                     <li><a href="#/model-hub-online" ${is('/model-hub-online')}><i class="material-icons">storage</i> Model Hub</a></li>
@@ -1503,30 +1503,7 @@ function renderDashboard() {
 function renderSettings() {
     const app = document.getElementById('app');
     app.innerHTML = `
-        <div class="sidebar">
-            <div class="logo">Zeeks AI</div>
-            <button class="new-btn">+ New</button>
-            <nav class="sidebar-nav">
-                <ul>
-                    <li><a href="#/"><i class="material-icons">chat_bubble_outline</i> Conversations</a></li>
-                    <li><a href="#/features"><i class="material-icons">star_outline</i> Features</a></li>
-                    <li><a href="#/model-hub-online"><i class="material-icons">storage</i> Model Hub</a></li>
-                    <li><a href="#/personas"><i class="material-icons">person_outline</i> Personas</a></li>
-                    <li><a href="#/prompts"><i class="material-icons">description</i> Prompts Library</a></li>
-                    <li><a href="#/knowledge-stacks"><i class="material-icons">book</i> Knowledge Stacks</a></li>
-                    <li><a href="#/toolbox"><i class="material-icons">build</i> Toolbox</a></li>
-                    <li><a href="#/workflows"><i class="material-icons">timeline</i> Workflows</a></li>
-                    <li><a href="#/playground"><i class="material-icons">science</i> AI Playground</a></li>
-                </ul>
-            </nav>
-            <div class="user-profile">
-                <div class="user-info">
-                    <img src="https://i.pravatar.cc/40" alt="User Avatar">
-                    <span>User</span>
-                </div>
-                <i class="material-icons">settings</i>
-            </div>
-        </div>
+        ${buildSidebar('/settings')}
         <div class="main-content">
             <div class="settings-page">
                 <h1>Settings</h1>
@@ -1567,30 +1544,7 @@ function renderSettings() {
 function renderFeatures() {
     const app = document.getElementById('app');
     app.innerHTML = `
-        <div class="sidebar">
-            <div class="logo">Zeeks AI</div>
-            <button class="new-btn">+ New</button>
-            <nav class="sidebar-nav">
-                <ul>
-                    <li><a href="#/"><i class="material-icons">chat_bubble_outline</i> Conversations</a></li>
-                    <li><a href="#/features" class="active"><i class="material-icons">star_outline</i> Features</a></li>
-                    <li><a href="#/model-hub-online"><i class="material-icons">storage</i> Model Hub</a></li>
-                    <li><a href="#/personas"><i class="material-icons">person_outline</i> Personas</a></li>
-                    <li><a href="#/prompts"><i class="material-icons">description</i> Prompts Library</a></li>
-                    <li><a href="#/knowledge-stacks"><i class="material-icons">book</i> Knowledge Stacks</a></li>
-                    <li><a href="#/toolbox"><i class="material-icons">build</i> Toolbox</a></li>
-                    <li><a href="#/workflows"><i class="material-icons">timeline</i> Workflows</a></li>
-                    <li><a href="#/playground"><i class="material-icons">science</i> AI Playground</a></li>
-                </ul>
-            </nav>
-            <div class="user-profile">
-                <div class="user-info">
-                    <img src="https://i.pravatar.cc/40" alt="User Avatar">
-                    <span>User</span>
-                </div>
-                <i class="material-icons">settings</i>
-            </div>
-        </div>
+        ${buildSidebar('/features')}
         <div class="main-content">
             <div class="features-overview">
                 <h1>Features</h1>
@@ -1630,30 +1584,7 @@ function renderFeatures() {
 function renderModelHubLocal() {
     const app = document.getElementById('app');
     app.innerHTML = `
-        <div class="sidebar">
-            <div class="logo">Zeeks AI</div>
-            <button class="new-btn">+ New</button>
-            <nav class="sidebar-nav">
-                <ul>
-                    <li><a href="#/"><i class="material-icons">chat_bubble_outline</i> Conversations</a></li>
-                    <li><a href="#/features"><i class="material-icons">star_outline</i> Features</a></li>
-                    <li><a href="#/model-hub-online" class="active"><i class="material-icons">storage</i> Model Hub</a></li>
-                    <li><a href="#/personas"><i class="material-icons">person_outline</i> Personas</a></li>
-                    <li><a href="#/prompts"><i class="material-icons">description</i> Prompts Library</a></li>
-                    <li><a href="#/knowledge-stacks"><i class="material-icons">book</i> Knowledge Stacks</a></li>
-                    <li><a href="#/toolbox"><i class="material-icons">build</i> Toolbox</a></li>
-                    <li><a href="#/workflows"><i class="material-icons">timeline</i> Workflows</a></li>
-                    <li><a href="#/playground"><i class="material-icons">science</i> AI Playground</a></li>
-                </ul>
-            </nav>
-            <div class="user-profile">
-                <div class="user-info">
-                    <img src="https://i.pravatar.cc/40" alt="User Avatar">
-                    <span>User</span>
-                </div>
-                <i class="material-icons">settings</i>
-            </div>
-        </div>
+        ${buildSidebar('/model-hub-local')}
         <div class="main-content">
             <div class="model-hub-local">
                 <h1>Model Hub - Local Models</h1>
@@ -1689,30 +1620,7 @@ function renderModelHubLocal() {
 function renderModelHubOnline() {
     const app = document.getElementById('app');
     app.innerHTML = `
-        <div class="sidebar">
-            <div class="logo">Zeeks AI</div>
-            <button class="new-btn">+ New</button>
-            <nav class="sidebar-nav">
-                <ul>
-                    <li><a href="#/"><i class="material-icons">chat_bubble_outline</i> Conversations</a></li>
-                    <li><a href="#/features"><i class="material-icons">star_outline</i> Features</a></li>
-                    <li><a href="#/model-hub-online" class="active"><i class="material-icons">storage</i> Model Hub</a></li>
-                    <li><a href="#/personas"><i class="material-icons">person_outline</i> Personas</a></li>
-                    <li><a href="#/prompts"><i class="material-icons">description</i> Prompts Library</a></li>
-                    <li><a href="#/knowledge-stacks"><i class="material-icons">book</i> Knowledge Stacks</a></li>
-                    <li><a href="#/toolbox"><i class="material-icons">build</i> Toolbox</a></li>
-                    <li><a href="#/workflows"><i class="material-icons">timeline</i> Workflows</a></li>
-                    <li><a href="#/playground"><i class="material-icons">science</i> AI Playground</a></li>
-                </ul>
-            </nav>
-            <div class="user-profile">
-                <div class="user-info">
-                    <img src="https://i.pravatar.cc/40" alt="User Avatar">
-                    <span>User</span>
-                </div>
-                <i class="material-icons">settings</i>
-            </div>
-        </div>
+        ${buildSidebar('/model-hub-online')}
         <div class="main-content studio-scope">
             <div class="model-hub-online">
                 <h1 style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">Model Hub - Online Models
@@ -1824,194 +1732,10 @@ function renderModelHubOnline() {
 
 // Single source of truth: any calls to renderModelHub will delegate to Online
 function renderModelHub() { renderModelHubOnline(); }
-
-// New consolidated Model Hub aligned with Studio navigation
-function renderModelHub() {
-    const app = document.getElementById('app');
-    app.innerHTML = `
-        <div class="sidebar">
-            <div class="logo">Zeeks AI</div>
-            <button class="new-btn">+ New</button>
-            <nav class="sidebar-nav">
-                <ul>
-                    <li><a href="#/"><i class="material-icons">chat_bubble_outline</i> Conversations</a></li>
-                    <li><a href="#/features"><i class="material-icons">star_outline</i> Features</a></li>
-                    <li><a href="#/model-hub-online" class="active"><i class="material-icons">storage</i> Model Hub</a></li>
-                    <li><a href="#/personas"><i class="material-icons">person_outline</i> Personas</a></li>
-                    <li><a href="#/prompts"><i class="material-icons">description</i> Prompts Library</a></li>
-                    <li><a href="#/knowledge-stacks"><i class="material-icons">book</i> Knowledge Stacks</a></li>
-                    <li><a href="#/toolbox"><i class="material-icons">build</i> Toolbox</a></li>
-                    <li><a href="#/workflows"><i class="material-icons">timeline</i> Workflows</a></li>
-                    <li><a href="#/playground"><i class="material-icons">science</i> AI Playground</a></li>
-                </ul>
-            </nav>
-            <div class="user-profile">
-                <div class="user-info">
-                    <img src="https://i.pravatar.cc/40" alt="User Avatar">
-                    <span>User</span>
-                </div>
-                <i class="material-icons">settings</i>
-            </div>
-        </div>
-        <div class="main-content studio-scope">
-            <div class="model-hub-online">
-                <div class="page-header">
-                    <div>
-                        <h1>Model Hub</h1>
-                        <p>Manage local models and connect to online providers.</p>
-                    </div>
-                </div>
-
-                <div class="model-hub-layout">
-                    <div class="provider-pane">
-                        <button class="create-engine-btn" style="width:100%"><i class="material-icons">add</i> Create Engine</button>
-                        <ul class="provider-list">
-                            <li><button class="provider-item active" data-name="Ollama"><img class="provider-icon" src="assets/providers/ollama-light.png" alt="Ollama" onerror="this.onerror=null;this.src='https://raw.githubusercontent.com/ollama/ollama/main/docs/public/ollama.png';"><span>Ollama</span></button></li>
-                            <li><button class="provider-item" data-name="LM Studio"><img class="provider-icon" src="assets/providers/lmstudio.svg" alt="LM Studio" onerror="this.onerror=null;this.src='https://lmstudio.ai/favicon.ico';"><span>LM Studio</span></button></li>
-                            <li><button class="provider-item" data-name="OpenAI"><img class="provider-icon" src="assets/providers/openai-light.png" alt="OpenAI" onerror="this.onerror=null;this.src='https://cdn.simpleicons.org/openai/FFFFFF';"><span>OpenAI</span></button></li>
-                            <li><button class="provider-item" data-name="Anthropic"><img class="provider-icon" src="assets/providers/anthropic.svg" alt="Anthropic" onerror="this.onerror=null;this.src='https://cdn.simpleicons.org/anthropic/FFFFFF';"><span>Anthropic</span></button></li>
-                            <li><button class="provider-item" data-name="Google AI"><img class="provider-icon" src="assets/providers/google-light.png" alt="Google AI" onerror="this.onerror=null;this.src='https://cdn.simpleicons.org/google/FFFFFF';"><span>Google AI</span></button></li>
-                            <li><button class="provider-item" data-name="Mistral AI"><img class="provider-icon" src="assets/providers/mistral.svg" alt="Mistral AI" onerror="this.onerror=null;this.src='https://www.mistral.ai/favicon.svg';"><span>Mistral AI</span></button></li>
-                            <li><button class="provider-item" data-name="Azure"><img class="provider-icon" src="assets/providers/azure.svg" alt="Azure" onerror="this.onerror=null;this.src='https://cdn.simpleicons.org/microsoftazure/FFFFFF';"><span>Azure</span></button></li>
-                            <li><button class="provider-item" data-name="DeepSeek"><img class="provider-icon" src="assets/providers/deepseek-light.png" alt="DeepSeek" onerror="this.onerror=null;this.src='https://www.deepseek.com/favicon.ico';"><span>DeepSeek</span></button></li>
-                            <li><button class="provider-item" data-name="xAI"><img class="provider-icon" src="assets/providers/xai.svg" alt="xAI" onerror="this.onerror=null;this.src='https://cdn.simpleicons.org/x/FFFFFF';"><span>xAI</span></button></li>
-                            <li><button class="provider-item" data-name="Meta"><img class="provider-icon" src="assets/providers/meta-light.png" alt="Meta" onerror="this.onerror=null;this.src='https://cdn.simpleicons.org/meta/FFFFFF';"><span>Meta</span></button></li>
-                            <li><button class="provider-item" data-name="OpenRouter"><img class="provider-icon" src="assets/providers/openrouter-light.png" alt="OpenRouter" onerror="this.onerror=null;this.src='https://openrouter.ai/favicon-32x32.png';"><span>OpenRouter</span></button></li>
-                            <li><button class="provider-item" data-name="Groq"><img class="provider-icon" src="assets/providers/groq.svg" alt="Groq" onerror="this.onerror=null;this.src='https://groq.com/favicon-32x32.png';"><span>Groq</span></button></li>
-                            <li><button class="provider-item" data-name="Cerebras"><img class="provider-icon" src="assets/providers/cerebras.svg" alt="Cerebras" onerror="this.onerror=null;this.src='https://www.cerebras.net/favicon-32x32.png';"><span>Cerebras</span></button></li>
-                        </ul>
-                        <div class="resource-panel" style="margin-top:12px">
-                            <div class="resource-item"><span>CPU</span><div class="bar"><div class="fill" style="width:45%"></div></div></div>
-                            <div class="resource-item"><span>Memory</span><div class="bar"><div class="fill" style="width:60%"></div></div></div>
-                            <div class="resource-item"><span>Disk</span><div class="bar"><div class="fill" style="width:30%"></div></div></div>
-                        </div>
-                    </div>
-                    <div class="config-card">
-                        <h2 style="margin-top:0">Ollama Configuration</h2>
-                        <p class="model-note">Provide the details for your local Ollama instance.</p>
-                        <div class="form-row">
-                            <label>Chat model</label>
-                            <div class="field-wrap">
-                                <input type="text" value="gpt-oss:20b" aria-label="Chat model">
-                                <button class="icon-btn" title="Refresh"><i class="material-icons">refresh</i></button>
-                                <button class="icon-btn" title="Copy"><i class="material-icons">content_copy</i></button>
-                                <button class="icon-btn" title="Clear"><i class="material-icons">backspace</i></button>
-                            </div>
-                        </div>
-                        <div class="form-row">
-                            <label>Vision model fallback <small class="help">(automatic switch if current model does not support vision)</small></label>
-                            <div class="field-wrap">
-                                <input type="text" value="qwen2.5vl:latest" aria-label="Vision model fallback">
-                                <button class="icon-btn" title="Copy"><i class="material-icons">content_copy</i></button>
-                                <button class="icon-btn" title="Clear"><i class="material-icons">backspace</i></button>
-                            </div>
-                        </div>
-                        <div class="form-row">
-                            <label>Pull model</label>
-                            <div class="inline">
-                                <input type="text" placeholder="Enter a model name to pull or select one" aria-label="Pull model">
-                                <button class="create-engine-btn">Pull</button>
-                            </div>
-                            <small class="help"><a href="#" style="color:inherit; text-decoration:underline">Browse models</a></small>
-                        </div>
-                        <div class="form-grid">
-                            <div class="form-row">
-                                <label>API Base URL</label>
-                                <div class="field-wrap">
-                                    <input type="text" value="http://localhost:11434" aria-label="API Base URL">
-                                    <button class="icon-btn" title="Copy"><i class="material-icons">content_copy</i></button>
-                                </div>
-                            </div>
-                            <div class="form-row">
-                                <label>Keep alive</label>
-                                <div class="field-wrap">
-                                    <input type="text" value="3600" aria-label="Keep alive">
-                                    <button class="icon-btn" title="Refresh"><i class="material-icons">refresh</i></button>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-row">
-                            <label>Parallel Requests</label>
-                            <input type="text" placeholder="Default" aria-label="Parallel Requests">
-                            <small class="help">Max parallel requests per model. Default is auto-selected based on memory.</small>
-                        </div>
-                        <div class="form-row">
-                            <label class="checkbox"><input type="checkbox"> Disable plugins for all models</label>
-                        </div>
-                        <hr style="border:none;border-top:1px solid var(--border-color);margin:16px 0" />
-                        <h3 style="margin:0 0 8px 0;display:flex;align-items:center;gap:8px;">Online Providers
-                            <span class="status-chip" data-target="modelhub" style="padding:2px 8px;border-radius:999px;color:#fff;font-size:11px;">CHECK</span>
-                        </h3>
-                        <div id="mh-providers" class="provider-grid" style="margin-top:8px">
-                            <p style="color:var(--muted-text)">Loading providers...</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    `;
-
-    // Populate providers dynamically (minimal) in consolidated view
-    (async () => {
-        const grid = document.getElementById('mh-providers');
-        if (!grid) return;
-        try {
-            const providers = await getOnlineProviders();
-            if (!providers.length) {
-                grid.innerHTML = '<p style="color:var(--muted-text)">No providers found.</p>';
-                return;
-            }
-            const html = providers.map(p => `
-                <div class="provider-card">
-                    <div class="meta">
-                        <h4>${p.provider || p.name}</h4>
-                        ${p.pricing ? `<p>${p.pricing}</p>` : ''}
-                    </div>
-                    <div class="actions">
-                        <button class="connect-btn provider-btn" data-name="${p.provider || p.name}">Connect</button>
-                        <button class="config-btn provider-btn" data-name="${p.provider || p.name}">Configure</button>
-                    </div>
-                </div>
-            `).join('');
-            grid.innerHTML = html;
-            toast('Providers loaded', 'success');
-        } catch (err) {
-            console.error(err);
-            grid.innerHTML = '<p style="color:#d32f2f">Failed to load providers.</p>';
-            toast('Failed to load providers', 'error');
-        }
-        updateStatusChips();
-    })();
-}
-
-// Profile
 function renderProfile() {
     const app = document.getElementById('app');
     app.innerHTML = `
-        <div class="sidebar">
-            <div class="logo">Zeeks AI</div>
-            <button class="new-btn">+ New</button>
-            <nav class="sidebar-nav">
-                <ul>
-                    <li><a href="#/"><i class="material-icons">chat_bubble_outline</i> Conversations</a></li>
-                    <li><a href="#/features"><i class="material-icons">star_outline</i> Features</a></li>
-                    <li><a href="#/model-hub-online"><i class="material-icons">storage</i> Model Hub</a></li>
-                    <li><a href="#/personas"><i class="material-icons">person_outline</i> Personas</a></li>
-                    <li><a href="#/prompts"><i class="material-icons">description</i> Prompts Library</a></li>
-                    <li><a href="#/knowledge-stacks"><i class="material-icons">book</i> Knowledge Stacks</a></li>
-                    <li><a href="#/toolbox"><i class="material-icons">build</i> Toolbox</a></li>
-                    <li><a href="#/workflows"><i class="material-icons">timeline</i> Workflows</a></li>
-                    <li><a href="#/playground"><i class="material-icons">science</i> AI Playground</a></li>
-                </ul>
-            </nav>
-            <div class="user-profile">
-                <div class="user-info">
-                    <img src="https://i.pravatar.cc/40" alt="User Avatar">
-                    <span>User</span>
-                </div>
-                <i class="material-icons">settings</i>
-            </div>
-        </div>
+        ${buildSidebar('/profile')}
         <div class="main-content">
             <div class="features-overview">
                 <h1>Profile</h1>
@@ -2025,30 +1749,7 @@ function renderProfile() {
 function renderNotifications() {
     const app = document.getElementById('app');
     app.innerHTML = `
-        <div class="sidebar">
-            <div class="logo">Zeeks AI</div>
-            <button class="new-btn">+ New</button>
-            <nav class="sidebar-nav">
-                <ul>
-                    <li><a href="#/"><i class="material-icons">chat_bubble_outline</i> Conversations</a></li>
-                    <li><a href="#/features"><i class="material-icons">star_outline</i> Features</a></li>
-                    <li><a href="#/model-hub-online"><i class="material-icons">storage</i> Model Hub</a></li>
-                    <li><a href="#/personas"><i class="material-icons">person_outline</i> Personas</a></li>
-                    <li><a href="#/prompts"><i class="material-icons">description</i> Prompts Library</a></li>
-                    <li><a href="#/knowledge-stacks"><i class="material-icons">book</i> Knowledge Stacks</a></li>
-                    <li><a href="#/toolbox"><i class="material-icons">build</i> Toolbox</a></li>
-                    <li><a href="#/workflows"><i class="material-icons">timeline</i> Workflows</a></li>
-                    <li><a href="#/playground"><i class="material-icons">science</i> AI Playground</a></li>
-                </ul>
-            </nav>
-            <div class="user-profile">
-                <div class="user-info">
-                    <img src="https://i.pravatar.cc/40" alt="User Avatar">
-                    <span>User</span>
-                </div>
-                <i class="material-icons">settings</i>
-            </div>
-        </div>
+        ${buildSidebar('/notifications')}
         <div class="main-content">
             <div class="features-overview">
                 <h1>Notifications</h1>
@@ -2062,30 +1763,7 @@ function renderNotifications() {
 function renderSupport() {
     const app = document.getElementById('app');
     app.innerHTML = `
-        <div class="sidebar">
-            <div class="logo">Zeeks AI</div>
-            <button class="new-btn">+ New</button>
-            <nav class="sidebar-nav">
-                <ul>
-                    <li><a href="#/"><i class="material-icons">chat_bubble_outline</i> Conversations</a></li>
-                    <li><a href="#/features"><i class="material-icons">star_outline</i> Features</a></li>
-                    <li><a href="#/model-hub-online"><i class="material-icons">storage</i> Model Hub</a></li>
-                    <li><a href="#/personas"><i class="material-icons">person_outline</i> Personas</a></li>
-                    <li><a href="#/prompts"><i class="material-icons">description</i> Prompts Library</a></li>
-                    <li><a href="#/knowledge-stacks"><i class="material-icons">book</i> Knowledge Stacks</a></li>
-                    <li><a href="#/toolbox"><i class="material-icons">build</i> Toolbox</a></li>
-                    <li><a href="#/workflows"><i class="material-icons">timeline</i> Workflows</a></li>
-                    <li><a href="#/playground"><i class="material-icons">science</i> AI Playground</a></li>
-                </ul>
-            </nav>
-            <div class="user-profile">
-                <div class="user-info">
-                    <img src="https://i.pravatar.cc/40" alt="User Avatar">
-                    <span>User</span>
-                </div>
-                <i class="material-icons">settings</i>
-            </div>
-        </div>
+        ${buildSidebar('/support')}
         <div class="main-content">
             <div class="features-overview">
                 <h1>Support</h1>
@@ -2099,30 +1777,7 @@ function renderSupport() {
 function renderPersonas() {
     const app = document.getElementById('app');
     app.innerHTML = `
-        <div class="sidebar">
-            <div class="logo">Zeeks AI</div>
-            <button class="new-btn">+ New</button>
-            <nav class="sidebar-nav">
-                <ul>
-                    <li><a href="#/"><i class="material-icons">chat_bubble_outline</i> Conversations</a></li>
-                    <li><a href="#/features"><i class="material-icons">star_outline</i> Features</a></li>
-                    <li><a href="#/model-hub-online"><i class="material-icons">storage</i> Model Hub</a></li>
-                    <li><a href="#/personas" class="active"><i class="material-icons">person_outline</i> Personas</a></li>
-                    <li><a href="#/prompts"><i class="material-icons">description</i> Prompts Library</a></li>
-                    <li><a href="#/knowledge-stacks"><i class="material-icons">book</i> Knowledge Stacks</a></li>
-                    <li><a href="#/toolbox"><i class="material-icons">build</i> Toolbox</a></li>
-                    <li><a href="#/workflows"><i class="material-icons">timeline</i> Workflows</a></li>
-                    <li><a href="#/playground"><i class="material-icons">science</i> AI Playground</a></li>
-                </ul>
-            </nav>
-            <div class="user-profile">
-                <div class="user-info">
-                    <img src="https://i.pravatar.cc/40" alt="User Avatar">
-                    <span>User</span>
-                </div>
-                <i class="material-icons">settings</i>
-            </div>
-        </div>
+        ${buildSidebar('/personas')}
         <div class="main-content">
             <div class="features-overview">
                 <h1>Personas</h1>
@@ -2147,30 +1802,7 @@ function renderPersonas() {
 function renderWorkflows() {
     const app = document.getElementById('app');
     app.innerHTML = `
-        <div class="sidebar">
-            <div class="logo">Zeeks AI</div>
-            <button class="new-btn">+ New</button>
-            <nav class="sidebar-nav">
-                <ul>
-                    <li><a href="#/"><i class="material-icons">chat_bubble_outline</i> Conversations</a></li>
-                    <li><a href="#/features"><i class="material-icons">star_outline</i> Features</a></li>
-                    <li><a href="#/model-hub-online"><i class="material-icons">storage</i> Model Hub</a></li>
-                    <li><a href="#/personas"><i class="material-icons">person_outline</i> Personas</a></li>
-                    <li><a href="#/prompts"><i class="material-icons">description</i> Prompts Library</a></li>
-                    <li><a href="#/knowledge-stacks"><i class="material-icons">book</i> Knowledge Stacks</a></li>
-                    <li><a href="#/toolbox"><i class="material-icons">build</i> Toolbox</a></li>
-                    <li><a href="#/workflows" class="active"><i class="material-icons">timeline</i> Workflows</a></li>
-                    <li><a href="#/playground"><i class="material-icons">science</i> AI Playground</a></li>
-                </ul>
-            </nav>
-            <div class="user-profile">
-                <div class="user-info">
-                    <img src="https://i.pravatar.cc/40" alt="User Avatar">
-                    <span>User</span>
-                </div>
-                <i class="material-icons">settings</i>
-            </div>
-        </div>
+        ${buildSidebar('/workflows')}
         <div class="main-content">
             <div class="features-overview">
                 <h1>Workflows</h1>
@@ -2190,30 +1822,7 @@ function renderWorkflows() {
 function renderPrompts() {
     const app = document.getElementById('app');
     app.innerHTML = `
-        <div class="sidebar">
-            <div class="logo">Zeeks AI</div>
-            <button class="new-btn">+ New</button>
-            <nav class="sidebar-nav">
-                <ul>
-                    <li><a href="#/"><i class="material-icons">chat_bubble_outline</i> Conversations</a></li>
-                    <li><a href="#/features"><i class="material-icons">star_outline</i> Features</a></li>
-                    <li><a href="#/model-hub-online"><i class="material-icons">storage</i> Model Hub</a></li>
-                    <li><a href="#/personas"><i class="material-icons">person_outline</i> Personas</a></li>
-                    <li><a href="#/prompts" class="active"><i class="material-icons">description</i> Prompts Library</a></li>
-                    <li><a href="#/knowledge-stacks"><i class="material-icons">book</i> Knowledge Stacks</a></li>
-                    <li><a href="#/toolbox"><i class="material-icons">build</i> Toolbox</a></li>
-                    <li><a href="#/workflows"><i class="material-icons">timeline</i> Workflows</a></li>
-                    <li><a href="#/playground"><i class="material-icons">science</i> AI Playground</a></li>
-                </ul>
-            </nav>
-            <div class="user-profile">
-                <div class="user-info">
-                    <img src="https://i.pravatar.cc/40" alt="User Avatar">
-                    <span>User</span>
-                </div>
-                <i class="material-icons">settings</i>
-            </div>
-        </div>
+        ${buildSidebar('/prompts')}
         <div class="main-content">
             <div class="prompts-library">
                 <h1>Prompts Library</h1>
@@ -2259,30 +1868,7 @@ function renderPrompts() {
 function renderToolbox() {
     const app = document.getElementById('app');
     app.innerHTML = `
-        <div class="sidebar">
-            <div class="logo">Zeeks AI</div>
-            <button class="new-btn">+ New</button>
-            <nav class="sidebar-nav">
-                <ul>
-                    <li><a href="#/"><i class="material-icons">chat_bubble_outline</i> Conversations</a></li>
-                    <li><a href="#/features"><i class="material-icons">star_outline</i> Features</a></li>
-                    <li><a href="#/model-hub-online"><i class="material-icons">storage</i> Model Hub</a></li>
-                    <li><a href="#/personas"><i class="material-icons">person_outline</i> Personas</a></li>
-                    <li><a href="#/prompts"><i class="material-icons">description</i> Prompts Library</a></li>
-                    <li><a href="#/knowledge-stacks"><i class="material-icons">book</i> Knowledge Stacks</a></li>
-                    <li><a href="#/toolbox" class="active"><i class="material-icons">build</i> Toolbox</a></li>
-                    <li><a href="#/workflows"><i class="material-icons">timeline</i> Workflows</a></li>
-                    <li><a href="#/playground"><i class="material-icons">science</i> AI Playground</a></li>
-                </ul>
-            </nav>
-            <div class="user-profile">
-                <div class="user-info">
-                    <img src="https://i.pravatar.cc/40" alt="User Avatar">
-                    <span>User</span>
-                </div>
-                <i class="material-icons">settings</i>
-            </div>
-        </div>
+        ${buildSidebar('/toolbox')}
         <div class="main-content">
             <div class="toolbox-mcp">
                 <h1>Toolbox</h1>
@@ -2308,67 +1894,41 @@ function renderToolbox() {
 function renderKnowledge() {
     const app = document.getElementById('app');
     app.innerHTML = `
-        <div class="sidebar">
-            <div class="logo">Msty Studio</div>
-            <button class="new-btn">+ New</button>
-            <nav class="sidebar-nav">
-                <ul>
-                    <li><a href="#/"><i class="material-icons">chat_bubble_outline</i> Conversations</a></li>
-                    <li><a href="#/features"><i class="material-icons">star_outline</i> Features</a></li>
-                    <li><a href="#/model-hub-local"><i class="material-icons">storage</i> Model Hub - Local</a></li>
-                    <li><a href="#/model-hub-online"><i class="material-icons">cloud_queue</i> Model Hub - Online</a></li>
-                    <li><a href="#/prompts"><i class="material-icons">description</i> Prompts Library</a></li>
-                    <li><a href="#/toolbox"><i class="material-icons">build</i> Toolbox - MCP Tools</a></li>
-                    <li><a href="#/knowledge-stacks" class="active"><i class="material-icons">book</i> Knowledge Stacks - RAG</a></li>
-                    <li><a href="#/playground"><i class="material-icons">science</i> AI Playground</a></li>
-                </ul>
-            </nav>
-            <div class="user-profile">
-                <div class="user-info">
-                    <img src="https://i.pravatar.cc/40" alt="User Avatar">
-                    <span>User</span>
-                </div>
-                <i class="material-icons">settings</i>
-            </div>
-        </div>
+        ${buildSidebar('/knowledge-stacks')}
         <div class="main-content">
-            <div class="knowledge-stacks">
-                <h1 style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">Knowledge Stacks
-                    <span class="status-chip" data-target="backend" style="padding:2px 8px;border-radius:999px;color:#fff;font-size:11px;">CHECK</span>
-                    <span class="status-chip" data-target="rag" style="padding:2px 8px;border-radius:999px;color:#fff;font-size:11px;">CHECK</span>
-                </h1>
+            <div class="features-overview knowledge-stacks">
+                <h1>Knowledge Stacks</h1>
                 <div class="knowledge-actions">
-                    <input type="text" id="rag-search-q" placeholder="Search knowledge (RAG)...">
-                    <button class="rag-search-btn">Search</button>
+                    <input type="text" placeholder="Search stacks or sources...">
                     <button class="new-stack-btn">New Stack</button>
-                </div>
-                <div class="rag-controls" style="margin-bottom:16px; display:flex; gap:10px; flex-wrap:wrap;">
-                    <button class="rag-upload-btn">Upload Source</button>
-                    <button class="rag-index-btn">Index Sources</button>
-                </div>
-                <div class="stack-card active">
-                    <div class="stack-info">
-                        <h3>Project Documents</h3>
-                        <p>Contains all documents related to the 'Future Forward' campaign.</p>
-                    </div>
-                    <div class="stack-buttons">
-                        <button>Edit</button>
-                        <button class="delete-btn">Delete</button>
-                        <button class="details-btn">View Details</button>
-                    </div>
                 </div>
                 <div class="stack-card">
                     <div class="stack-info">
-                        <h3>General Knowledge</h3>
-                        <p>A general-purpose knowledge base.</p>
+                        <h3>Product Docs</h3>
+                        <p>Indexed docs with FAQ and release notes.</p>
                     </div>
                     <div class="stack-buttons">
-                        <button>Edit</button>
+                        <button class="details-btn">Details</button>
+                        <button class="add-source-btn">Add Source</button>
                         <button class="delete-btn">Delete</button>
-                        <button class>View Details</button>
                     </div>
                 </div>
-                <button class="add-source-btn">Add Data Source</button>
+                <div class="stack-card active">
+                    <div class="stack-info">
+                        <h3>Work Team Knowledge</h3>
+                        <p>Internal wiki and meeting notes.</p>
+                    </div>
+                    <div class="stack-buttons">
+                        <button class="details-btn">Details</button>
+                        <button class="add-source-btn">Add Source</button>
+                        <button class="delete-btn">Delete</button>
+                    </div>
+                </div>
+                <div style="margin-top:16px;display:flex;gap:10px;align-items:center">
+                    <button class="rag-upload-btn">Upload Documents</button>
+                    <input type="search" placeholder="Search knowledge..." style="flex:1">
+                    <button class="new-btn" onclick="(function(){document.querySelector('.rag-results').innerHTML='';})()">Clear</button>
+                </div>
                 <div class="rag-results" style="margin-top:16px;"></div>
             </div>
         </div>
@@ -2388,30 +1948,7 @@ function renderKnowledge() {
 function renderPlayground() {
     const app = document.getElementById('app');
     app.innerHTML = `
-        <div class="sidebar">
-            <div class="logo">Zeeks AI</div>
-            <button class="new-btn">+ New</button>
-            <nav class="sidebar-nav">
-                <ul>
-                    <li><a href="#/"><i class="material-icons">chat_bubble_outline</i> Conversations</a></li>
-                    <li><a href="#/features"><i class="material-icons">star_outline</i> Features</a></li>
-                    <li><a href="#/model-hub-online"><i class="material-icons">storage</i> Model Hub</a></li>
-                    <li><a href="#/personas"><i class="material-icons">person_outline</i> Personas</a></li>
-                    <li><a href="#/prompts"><i class="material-icons">description</i> Prompts Library</a></li>
-                    <li><a href="#/knowledge-stacks"><i class="material-icons">book</i> Knowledge Stacks</a></li>
-                    <li><a href="#/toolbox"><i class="material-icons">build</i> Toolbox</a></li>
-                    <li><a href="#/workflows"><i class="material-icons">timeline</i> Workflows</a></li>
-                    <li><a href="#/playground" class="active"><i class="material-icons">science</i> AI Playground</a></li>
-                </ul>
-            </nav>
-            <div class="user-profile">
-                <div class="user-info">
-                    <img src="https://i.pravatar.cc/40" alt="User Avatar">
-                    <span>User</span>
-                </div>
-                <i class="material-icons">settings</i>
-            </div>
-        </div>
+        ${buildSidebar('/playground')}
         <div class="main-content">
             <div class="ai-playground">
                 <h1>AI Playground</h1>
