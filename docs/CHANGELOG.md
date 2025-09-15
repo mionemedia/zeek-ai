@@ -8,6 +8,17 @@ All notable changes to this project will be documented here.
 
 - Pending
 
+## [0.1.2] - 2025-09-15
+
+### Fixed
+
+- Resolve renderer blank screen by removing duplicate `sendBtn` declaration in `script.js` and consolidating send handling.
+- Restore modern desktop UI after rollback; keep Electron desktop architecture with FastAPI loopback.
+
+### Changed
+
+- Kept `UI_BUNDLE` switch in `app/main.cjs` to toggle between `index.html` (root) and `web/index.html` during stabilization.
+
 ## [0.1.1] - 2025-09-15
 
 ### Added

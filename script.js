@@ -477,13 +477,6 @@ document.addEventListener('DOMContentLoaded', () => {
         window.__listenersBound = true;
         // Use event delegation
         app.addEventListener('click', (e) => {
-            // Chat: send button
-            const sendBtn = e.target.closest && e.target.closest('.send-btn');
-            if (sendBtn) {
-                e.preventDefault(); e.stopPropagation();
-                handleSend(sendBtn);
-                return;
-            }
             // Sidebar navigation: handle all in-app links
             const navA = e.target.closest && e.target.closest('.sidebar-nav a[href^="#/"]');
             if (navA) {
