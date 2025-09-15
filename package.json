@@ -1,0 +1,22 @@
+{
+  "name": "zeek-ai",
+  "version": "0.1.0",
+  "private": true,
+  "main": "app/main.cjs",
+  "scripts": {
+    "build:preload": "esbuild app/preload.ts --bundle --platform=node --format=cjs --external:electron --outfile=app/preload.js --sourcemap",
+    "build:main": "esbuild app/main.ts --platform=node --format=cjs --outfile=app/main.js --sourcemap",
+    "dev": "npm run build:preload && npm run build:main && cmd /c \"set ELECTRON_RUN_AS_NODE=& set CORE_PORT=8000& .\\node_modules\\.bin\\electron.cmd .\"",
+    "backend": "uvicorn backend.app.main:app --host 127.0.0.1 --port 8000",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@types/electron": "^1.6.10",
+    "@types/node": "^20.12.12",
+    "cross-env": "^7.0.3",
+    "electron": "^30.5.1",
+    "esbuild": "^0.21.5",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.5.4"
+  }
+}
