@@ -19,6 +19,20 @@
 - [x] Tailwind CSS integration in current vanilla UI (no React): Tailwind CLI wired, `dist/styles.css` linked, theme toggles live.
 - [ ] Chat window layout parity (post‑Tailwind): audit Conversations view and apply minimal, scoped fixes.
 
+### Repo hygiene
+
+- [ ] Protect `main` branch: require PRs, prevent force pushes/deletions, optional status checks
+
+### Conversations UX polish
+
+- [ ] Wire `button[data-action="new-conversation"]` to clear thread and focus composer
+
+### React/Next.js spike (parallel, behind flag)
+
+- [ ] Scaffold `web/` Next.js with Tailwind
+- [ ] Add Electron flag to load Next renderer in dev/prod
+- [ ] Port Conversations view to parity; keep fallback to current renderer
+
 ## Phase 2: Near Term
 - [ ] shadcn/ui components, blocks, themes via React/Next.js when moving from Option B to Option A
 - [ ] RAG sources UI (upload/index/search stubs in frontend)

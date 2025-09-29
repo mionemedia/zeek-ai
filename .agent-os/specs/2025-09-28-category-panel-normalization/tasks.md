@@ -37,7 +37,21 @@ Parent Task 5 — Tailwind CSS integration (vanilla UI, no React)
 
 Parent Task 6 — Chat window layout parity (post‑Tailwind)
 
-- [ ] 6.1 Audit Conversations view elements (header, list card, composer bar, actions) for spacing/position shifts
-- [ ] 6.2 Apply minimal, scoped fixes (utilities or token mapping) to restore original layout
-- [ ] 6.3 Verify Light/Dark/System parity and hover/focus states
+- [x] 6.1 Audit Conversations view elements (header, list card, composer bar, actions) for spacing/position shifts
+- [x] 6.2 Apply minimal, scoped fixes (utilities or token mapping) to restore original layout
+- [x] 6.3 Verify Light/Dark/System parity and hover/focus states
 - [ ] 6.4 Regression pass on other routes (no visual drift)
+
+Parent Task 7 — Repo hygiene
+
+- [ ] 7.1 Protect `main` branch: require PRs, prevent force pushes/deletions, optional status checks
+
+Parent Task 8 — Conversations UX polish
+
+- [ ] 8.1 Wire `button[data-action="new-conversation"]` to clear thread and focus composer
+
+Parent Task 9 — React/Next.js spike (parallel, behind flag)
+
+- [ ] 9.1 Scaffold `web/` Next.js with Tailwind
+- [ ] 9.2 Add Electron flag to load Next renderer in dev/prod
+- [ ] 9.3 Port Conversations view to parity; keep fallback to current renderer
