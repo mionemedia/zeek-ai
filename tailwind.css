@@ -1,0 +1,32 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Bridge existing tokens to Tailwind-style variables */
+:root {
+  /* prefer project tokens if present */
+  /* Primary maps to existing icon accent */
+  --primary: var(--icon-accent);
+  /* Optional hsl slots for extensions (safely fallback) */
+  --background: 215 36% 14%;
+  --foreground: 210 40% 98%;
+  --muted: 215 28% 18%;
+  --border: 215 28% 22%;
+}
+
+html[data-theme="light"] {
+  --primary: #5DE2E7;
+}
+html[data-theme="dark"] {
+  --primary: #049499;
+}
+
+/* Global Light/Dark coverage using Tailwind utilities */
+@layer base {
+  body {
+    @apply bg-white text-slate-900 dark:bg-slate-900 dark:text-slate-100;
+  }
+}
+
+/* Intentionally avoid component-level overrides to preserve existing visuals.
+   We only set page background/text; components continue to use style.css tokens. */
