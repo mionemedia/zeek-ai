@@ -14,6 +14,18 @@
   --icon-accent: #049499;
 }
 
+/* Accessibility and focus parity */
+.tool-btn:focus-visible,
+.send-btn:focus-visible {
+    outline: 2px solid var(--icon-accent);
+    outline-offset: 2px;
+}
+
+.composer-row input[type="text"]:focus {
+    border-color: var(--icon-accent);
+    box-shadow: 0 0 0 2px color-mix(in srgb, var(--icon-accent) 35%, transparent);
+}
+
 @media (prefers-color-scheme: light) {
   :root { --icon-accent: #5DE2E7; }
 }
@@ -25,18 +37,6 @@ html[data-theme="dark"] {
 html[data-theme="light"] {
   --icon-accent: #5DE2E7;
 }
-
-/* Apply accent color to app icons (Material Icons, generic icons). Text remains white via existing rules. */
-.material-icons,
-.icon,
-.agent-mi,
-.sidebar-nav i.material-icons,
-.conv-actions i.material-icons {
-  color: var(--icon-accent) !important;
-}
-
-/* Do NOT recolor provider logo images (LM provider icons) */
-img.provider-icon { filter: none !important; }
 
 /* Global dropdown theme (applies to all select elements across the app) */
 select,
@@ -692,10 +692,7 @@ body {
     margin-bottom: 8px;
 }
 
-.conv-actions i {
-    color: var(--muted-text);
-    cursor: pointer;
-}
+/* fixed above: .conv-actions styles */
 
 .conv-section-title {
     color: var(--muted-text);
