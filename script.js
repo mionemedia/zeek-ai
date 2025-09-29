@@ -948,6 +948,19 @@ document.addEventListener('DOMContentLoaded', () => {
         window.__listenersBound = true;
         // Use event delegation
         app.addEventListener('click', (e) => {
+        // Conversations: New conversation button
+        const newConv = e.target.closest && e.target.closest('button[data-action="new-conversation"]');
+        if (newConv) {
+            e.preventDefault();
+            try {
+                const chat = document.querySelector('.chat-scroll');
+                if (chat) chat.innerHTML = '';
+                const input = document.querySelector('.composer-row input[type="text"]');
+                if (input) { input.value = ''; input.focus(); }
+                notify('New conversation started');
+            } catch {}
+            return;
+        }
             // Sidebar navigation: handle all in-app links
             const navA = e.target.closest && e.target.closest('.sidebar-nav a[href^="#/"]');
             if (navA) {
