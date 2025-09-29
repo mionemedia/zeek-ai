@@ -2,17 +2,17 @@
 function buildSidebar(activeRoute) {
     const is = (hash) => (activeRoute === hash ? 'class="active"' : '');
     return `
-        <div class="sidebar">
+        <div class="sidebar p-3 space-y-2 bg-gray-100 dark:bg-gray-800">
             <div class="logo">Zeeks AI</div>
-            <div class="status-lights" style="display:flex;gap:8px;align-items:center;margin:8px 0 4px 0;">
-                <span style="font-size:11px;color:var(--muted-text)">Status:</span>
+            <div class="status-lights flex items-center gap-2">
+                <span class="text-xs text-gray-500 dark:text-gray-400">Status:</span>
                 <span id="light-backend" class="light" title="Backend" style="font-size:16px;color:#90a4ae">●</span>
-                <span id="light-modelhub" class="light" title="Model Hub API" style="font-size:16px;color:#90a4ae">●</span>
+                <span id="light-modelhub" class="light" title="Model Hub" style="font-size:16px;color:#90a4ae">●</span>
                 <span id="light-rag" class="light" title="RAG API" style="font-size:16px;color:#90a4ae">●</span>
             </div>
-            <button class="new-btn">+ New</button>
+            
             <nav class="sidebar-nav">
-                <ul>
+                <ul class="space-y-2">
                     <li><a href="#/" ${is('/') }><i class="material-icons">chat_bubble_outline</i> Conversations</a></li>
                     
                     <li><a href="#/personal" ${is('/personal')}><i class="material-icons">person</i> Personal</a></li>
@@ -26,7 +26,7 @@ function buildSidebar(activeRoute) {
                     <li><a href="#/playground" ${is('/playground')}><i class="material-icons">science</i> AI Playground</a></li>
                 </ul>
             </nav>
-            <div class="user-profile">
+            <div class="user-profile mt-2">
                 <div class="user-info">
                     <img src="https://i.pravatar.cc/40" alt="User Avatar">
                     <span>User</span>
@@ -34,7 +34,9 @@ function buildSidebar(activeRoute) {
                 <i class="material-icons">settings</i>
             </div>
         </div>
+        </div>
     `;
+
 }
 
 function updateModelBadge() {
@@ -95,6 +97,40 @@ async function fetchModelsForProvider(provider) {
             if (!res.ok) throw new Error(`HTTP ${res.status}`);
             const json = await res.json();
             const models = Array.isArray(json && json.models) ? json.models.map(m => m.name || m.tag).filter(Boolean) : [];
+
+// System Prompt Generator mega-prompt used by the Agents System Prompt Creator (top-level)
+const SYSTEM_MEGA_PROMPT = [
+    '<system_prompt>',
+    'YOU ARE AN ELITE PROMPT ENGINEER RECRUITED BY OPENAI TO DESIGN SYSTEM PROMPTS THAT TRANSFORM LLMS INTO EXPERT-LEVEL AGENTS. YOUR GOAL IS TO CREATE A FRAMEWORK THAT ENSURES OPTIMAL EXPERTISE, STRUCTURED CHAIN-OF-THOUGHT REASONING, AND TASK-SPECIFIC OPTIMIZATION FOR CUSTOM GPTs AND AI AGENTS. FIRST ASK THE USER WHAT THEY ARE BUILDING AND WHAT INSTRUCTIONS THEY NEED - ASK MAXIMUM OF 4 QUESTIONS. DON\'T USE CANVAS FEATURE UNLESS PROMPTED BY USER.',
+    '',
+    '### INSTRUCTIONS ###',
+    '- DEVELOP A COMPREHENSIVE GUIDE TO SYSTEM PROMPT GENERATION.',
+    '- INCORPORATE A STRUCTURED **CHAIN OF THOUGHT (CoT)** TO ENSURE REASONING CLARITY.',
+    '- PROVIDE STEP-BY-STEP INSTRUCTIONS ON HOW TO DESIGN EXPERT AI PROMPTS.',
+    '- INCLUDE **NEGATIVE PROMPTING (WHAT NOT TO DO)** TO MAINTAIN OUTPUT QUALITY.',
+    '- ADAPT PROMPTS BASED ON MODEL SIZE, FROM SMALL (1B) TO LARGE (175B) PARAMETERS.',
+    '- INCLUDE AT LEAST TWO **EXAMPLE SYSTEM PROMPTS** FOR DIFFERENT EXPERT ROLES.',
+    '',
+    '### CHAIN OF THOUGHT ###',
+    '1. UNDERSTAND: Identify the core principles of system prompt design.',
+    '2. BASICS: Outline the importance of defining expert roles and structured outputs.',
+    '3. BREAK DOWN: Decompose prompt elements (expert role, CoT, task-specific guidance).',
+    '4. ANALYZE: Evaluate how different model sizes require different prompt complexities.',
+    '5. BUILD: Construct a detailed system prompt template for expert-level AI agents.',
+    '6. EDGE CASES: Address common mistakes in prompt design and negative behaviors.',
+    '7. FINAL ANSWER: Deliver a **fully structured system prompt generator guide**.',
+    '',
+    '### WHAT NOT TO DO ###',
+    '- NEVER WRITE AMBIGUOUS OR GENERIC SYSTEM PROMPTS.',
+    '- NEVER OMIT THE **CHAIN OF THOUGHT (CoT)** STEP-BY-STEP PROCESS.',
+    '- NEVER FAIL TO PROVIDE **NEGATIVE PROMPTING** TO AVOID LOW-QUALITY OUTPUTS.',
+    '- NEVER IGNORE TASK-SPECIFIC INSTRUCTIONS FOR DIFFERENT MODEL SIZES.',
+    '',
+    '### EXPECTED OUTPUT ###',
+    'A FULLY STRUCTURED SYSTEM PROMPT GENERATOR GUIDE THAT CAN BE USED TO DESIGN CUSTOM GPTs CAPABLE OF EXPERT-LEVEL TASK PERFORMANCE. ALWAYS GIVE YOUR SYSTEM PROMPT OUTPUT IN A MARKDOWN FORMAT.',
+    '',
+    '</system_prompt>'
+].join('\n');
             return models;
         }
         if (key.startsWith('google')) {
@@ -344,12 +380,188 @@ function buildProviderConfig(providerName) {
 const NOTES_STORE_KEY = 'personal:notes:store';
 const NOTES_CURRENT_KEY = 'personal:notes:current';
 
+// --- Agents Catalog (seeded from https://github.com/ashishpatel26/500-AI-Agents-Projects ) ---
+// Minimal starter set; expand by adding entries below. Each agent maps to a category and a logo URL.
+const AGENTS_CATEGORIES = [
+    'Productivity', 'Coding', 'Design', 'Image/GenAI', 'Voice/Audio', 'RPA/Automation', 'Education', 'Research', 'Data/Analytics'
+];
+const AGENTS_CATALOG = [
+    {
+        name: 'Code Assistant',
+        category: 'Coding',
+        description: 'AI pair programmer for code generation, explanation, and refactoring.',
+        repo: 'https://github.com/ashishpatel26/500-AI-Agents-Projects',
+        logo: 'https://cdn.simpleicons.org/github/FFFFFF'
+    },
+    {
+        name: 'Research Analyst',
+        category: 'Research',
+        description: 'Web research, summarization, and citation drafting agent.',
+        repo: 'https://github.com/ashishpatel26/500-AI-Agents-Projects',
+        logo: 'https://cdn.simpleicons.org/readthedocs/FFFFFF'
+    },
+    {
+        name: 'Image Designer',
+        category: 'Image/GenAI',
+        description: 'Prompt-to-image generation assistant with style presets.',
+        repo: 'https://github.com/ashishpatel26/500-AI-Agents-Projects',
+        logo: 'https://cdn.simpleicons.org/adobecreativecloud/FFFFFF'
+    },
+    {
+        name: 'Voice Scribe',
+        category: 'Voice/Audio',
+        description: 'Speech-to-text and text-to-speech workflows with diarization.',
+        repo: 'https://github.com/ashishpatel26/500-AI-Agents-Projects',
+        logo: 'https://cdn.simpleicons.org/microsoftextra/FFFFFF'
+    },
+    {
+        name: 'Task Automator',
+        category: 'RPA/Automation',
+        description: 'Desktop/web automation with natural language commands.',
+        repo: 'https://github.com/ashishpatel26/500-AI-Agents-Projects',
+        logo: 'https://cdn.simpleicons.org/powershell/FFFFFF'
+    },
+    {
+        name: 'Study Buddy',
+        category: 'Education',
+        description: 'Interactive tutor that explains topics with examples and quizzes.',
+        repo: 'https://github.com/ashishpatel26/500-AI-Agents-Projects',
+        logo: 'https://cdn.simpleicons.org/googleclassroom/FFFFFF'
+    },
+    {
+        name: 'Productivity Planner',
+        category: 'Productivity',
+        description: 'Daily planning, reminders, and project breakdowns.',
+        repo: 'https://github.com/ashishpatel26/500-AI-Agents-Projects',
+        logo: 'https://cdn.simpleicons.org/todoist/FFFFFF'
+    },
+    {
+        name: 'Data Wrangler',
+        category: 'Data/Analytics',
+        description: 'CSV/JSON exploration, charting, and QA over data.',
+        repo: 'https://github.com/ashishpatel26/500-AI-Agents-Projects',
+        logo: 'https://cdn.simpleicons.org/plotly/FFFFFF'
+    }
+];
+
+// System Prompt Generator mega-prompt used by the Agents System Prompt Creator (top-level)
+const SYSTEM_MEGA_PROMPT = [
+    '<system_prompt>',
+    'YOU ARE AN ELITE PROMPT ENGINEER RECRUITED BY OPENAI TO DESIGN SYSTEM PROMPTS THAT TRANSFORM LLMS INTO EXPERT-LEVEL AGENTS. YOUR GOAL IS TO CREATE A FRAMEWORK THAT ENSURES OPTIMAL EXPERTISE, STRUCTURED CHAIN-OF-THOUGHT REASONING, AND TASK-SPECIFIC OPTIMIZATION FOR CUSTOM GPTs AND AI AGENTS. FIRST ASK THE USER WHAT THEY ARE BUILDING AND WHAT INSTRUCTIONS THEY NEED - ASK MAXIMUM OF 4 QUESTIONS. DON\'T USE CANVAS FEATURE UNLESS PROMPTED BY USER.',
+    '',
+    '### INSTRUCTIONS ###',
+    '- DEVELOP A COMPREHENSIVE GUIDE TO SYSTEM PROMPT GENERATION.',
+    '- INCORPORATE A STRUCTURED **CHAIN OF THOUGHT (CoT)** TO ENSURE REASONING CLARITY.',
+    '- PROVIDE STEP-BY-STEP INSTRUCTIONS ON HOW TO DESIGN EXPERT AI PROMPTS.',
+    '- INCLUDE **NEGATIVE PROMPTING (WHAT NOT TO DO)** TO MAINTAIN OUTPUT QUALITY.',
+    '- ADAPT PROMPTS BASED ON MODEL SIZE, FROM SMALL (1B) TO LARGE (175B) PARAMETERS.',
+    '- INCLUDE AT LEAST TWO **EXAMPLE SYSTEM PROMPTS** FOR DIFFERENT EXPERT ROLES.',
+    '',
+    '### CHAIN OF THOUGHT ###',
+    '1. UNDERSTAND: Identify the core principles of system prompt design.',
+    '2. BASICS: Outline the importance of defining expert roles and structured outputs.',
+    '3. BREAK DOWN: Decompose prompt elements (expert role, CoT, task-specific guidance).',
+    '4. ANALYZE: Evaluate how different model sizes require different prompt complexities.',
+    '5. BUILD: Construct a detailed system prompt template for expert-level AI agents.',
+    '6. EDGE CASES: Address common mistakes in prompt design and negative behaviors.',
+    '7. FINAL ANSWER: Deliver a **fully structured system prompt generator guide**.',
+    '',
+    '### WHAT NOT TO DO ###',
+    '- NEVER WRITE AMBIGUOUS OR GENERIC SYSTEM PROMPTS.',
+    '- NEVER OMIT THE **CHAIN OF THOUGHT (CoT)** STEP-BY-STEP PROCESS.',
+    '- NEVER FAIL TO PROVIDE **NEGATIVE PROMPTING** TO AVOID LOW-QUALITY OUTPUTS.',
+    '- NEVER IGNORE TASK-SPECIFIC INSTRUCTIONS FOR DIFFERENT MODEL SIZES.',
+    '',
+    '### EXPECTED OUTPUT ###',
+    'A FULLY STRUCTURED SYSTEM PROMPT GENERATOR GUIDE THAT CAN BE USED TO DESIGN CUSTOM GPTs CAPABLE OF EXPERT-LEVEL TASK PERFORMANCE. ALWAYS GIVE YOUR SYSTEM PROMPT OUTPUT IN A MARKDOWN FORMAT.',
+    '',
+    '</system_prompt>'
+].join('\n');
+
 function debounce(fn, wait) {
     let t;
     return function(...args) {
         clearTimeout(t);
         t = setTimeout(() => fn.apply(this, args), wait);
     };
+}
+
+// Normalize strings for comparisons (trim + lowercase)
+function key(val) {
+    return (val || "").trim().toLowerCase();
+}
+
+// Lightweight toast notification
+function notify(text, ms = 2200) {
+    try {
+        let root = document.getElementById('toast-root');
+        if (!root) {
+            root = document.createElement('div');
+            root.id = 'toast-root';
+            root.style.position = 'fixed';
+            root.style.bottom = '16px';
+            root.style.right = '16px';
+            root.style.display = 'flex';
+            root.style.flexDirection = 'column';
+            root.style.gap = '8px';
+            root.style.zIndex = '9999';
+            document.body.appendChild(root);
+        }
+        const el = document.createElement('div');
+        el.textContent = text;
+        el.style.padding = '10px 12px';
+        el.style.border = '1px solid var(--card-border)';
+        el.style.borderRadius = '8px';
+        el.style.background = 'var(--card)';
+        el.style.color = 'var(--text)';
+        el.style.boxShadow = '0 2px 10px rgba(0,0,0,0.25)';
+        root.appendChild(el);
+        setTimeout(() => { try { root.removeChild(el); } catch {} }, ms);
+    } catch {}
+}
+
+// --- Theme helpers ---
+function _applySystemTheme() {
+    try {
+        const mq = window.matchMedia('(prefers-color-scheme: dark)');
+        const dark = mq.matches;
+        document.documentElement.setAttribute('data-theme', dark ? 'dark' : 'light');
+    } catch {}
+}
+function _bindSystemThemeWatcher() {
+    try {
+        if (window.__themeMedia) return;
+        const mq = window.matchMedia('(prefers-color-scheme: dark)');
+        const handler = (e) => {
+            document.documentElement.setAttribute('data-theme', e.matches ? 'dark' : 'light');
+        };
+        mq.addEventListener ? mq.addEventListener('change', handler) : mq.addListener(handler);
+        window.__themeMedia = { mq, handler };
+    } catch {}
+}
+function _unbindSystemThemeWatcher() {
+    try {
+        const ref = window.__themeMedia;
+        if (ref && ref.mq) {
+            ref.mq.removeEventListener ? ref.mq.removeEventListener('change', ref.handler) : ref.mq.removeListener(ref.handler);
+        }
+        window.__themeMedia = null;
+    } catch {}
+}
+function setTheme(theme) {
+    try { localStorage.setItem('theme', theme); } catch {}
+    if (theme === 'system' || !theme) {
+        // Follow OS setting and ensure Tailwind dark: variants react via data-theme attribute
+        _applySystemTheme();
+        _bindSystemThemeWatcher();
+    } else {
+        _unbindSystemThemeWatcher();
+        document.documentElement.setAttribute('data-theme', theme);
+    }
+}
+function initThemeFromStorage() {
+    const t = (localStorage.getItem('theme') || 'system');
+    setTheme(t);
 }
 
 function genNoteId() { return 'note-' + Date.now(); }
@@ -638,6 +850,9 @@ function renderSplitChats() {
 }
 document.addEventListener('DOMContentLoaded', () => {
     const app = document.getElementById('app');
+
+    // Apply persisted theme early
+    initThemeFromStorage();
 
     const routes = {
         '/': renderDashboard,
@@ -1758,34 +1973,25 @@ function renderDashboard() {
     const app = document.getElementById('app');
     app.innerHTML = `
         ${buildSidebar('/')}
+        <div class="main-content">
         <div class="conversations-list">
             <div class="conv-toolbar">
                 <h2>Conversations</h2>
                 <div class="conv-actions">
+                    <button class="new-btn" data-action="new-conversation" title="Start new conversation" style="margin-right:8px">+ New</button>
                     <i class="material-icons" title="Search">search</i>
                     <i class="material-icons" title="Notifications">notifications_none</i>
                 </div>
             </div>
             <div class="conv-sections">
-                <div class="conv-section">
-                    <div class="conv-section-title">Misc</div>
-                    <ul>
-                        <li>- Future Campaign</li>
-                        <li>- Brainstorm visuals</li>
-                    </ul>
-                </div>
-                <div class="conv-section">
-                    <div class="conv-section-title">Migrated Projects - Team</div>
-                    <ul>
-                        <li>- Testing and Debugging</li>
-                        <li>- Facebook Video Downloader</li>
-                    </ul>
+                <div class="conv-empty" style="color:var(--muted-text);font-size:13px;padding:8px 6px;">
+                    No conversations yet. Start one below.
                 </div>
             </div>
         </div>
         <div class="chat-main">
             <div class="chat-scroll chat-messages">
-                <div class="message ai-message"><p>Welcome to Zeeks AI! I can help you with a variety of tasks. Try asking me to generate some ideas for your campaign.</p></div>
+                <div class="message ai-message"><p>Welcome to Zeeks AI! I can help you with a variety of tasks. Try asking me to generate some ideas for your projects.</p></div>
             </div>
             <div class="composer">
                 <div class="composer-toolbar" style="display:flex;align-items:center;gap:8px">
@@ -1817,18 +2023,19 @@ function renderSettings() {
     app.innerHTML = `
         ${buildSidebar('/settings')}
         <div class="main-content">
-            <div class="settings-page">
-                <h1>Settings</h1>
-                <p>Manage your application preferences and account settings.</p>
+            <div class="settings-page p-4 space-y-4">
+                <h1 class="text-xl font-semibold">Settings</h1>
+                <p class="text-sm text-gray-600 dark:text-gray-300">Manage your application preferences and account settings.</p>
 
-                <div class="settings-section">
-                    <h2>Appearance</h2>
-                    <div class="settings-card">
-                        <div class="radio-group">
-                            <label><input type="radio" name="theme" value="light"> Light</label>
-                            <label><input type="radio" name="theme" value="dark" checked> Dark</label>
-                            <label><input type="radio" name="theme" value="system"> System</label>
+                <div class="settings-section space-y-2">
+                    <h2 class="text-lg font-medium">Appearance</h2>
+                    <div class="settings-card p-4 rounded-lg border">
+                        <div class="radio-group flex items-center gap-4 flex-wrap">
+                            <label><input id="theme-system" type="radio" name="theme" value="system" ${localStorage.getItem('theme') === 'system' ? 'checked' : ''}> System</label>
+                            <label><input id="theme-light" type="radio" name="theme" value="light" ${localStorage.getItem('theme') === 'light' ? 'checked' : ''}> Light</label>
+                            <label><input id="theme-dark" type="radio" name="theme" value="dark" ${localStorage.getItem('theme') === 'dark' ? 'checked' : ''}> Dark</label>
                         </div>
+                        <p style="margin-top:8px;color:var(--muted-text);font-size:12px">Theme affects icon accent colors immediately. Restart may be needed for some OS-controlled widgets.</p>
                     </div>
                 </div>
 
@@ -1851,6 +2058,23 @@ function renderSettings() {
             </div>
         </div>
     `;
+
+    // Theme radio wiring (persist + apply)
+    try {
+        const current = (localStorage.getItem('theme') || 'system');
+        const sys = document.getElementById('theme-system');
+        const light = document.getElementById('theme-light');
+        const dark = document.getElementById('theme-dark');
+        if (sys) sys.checked = current === 'system';
+        if (light) light.checked = current === 'light';
+        if (dark) dark.checked = current === 'dark';
+        document.querySelectorAll('input[name="theme"]').forEach(el => {
+            el.addEventListener('change', (e) => {
+                const v = e.target && e.target.value ? e.target.value : 'system';
+                setTheme(v);
+            });
+        });
+    } catch {}
 }
 
 function renderFeatures() {
@@ -2133,48 +2357,272 @@ function renderWorkflows() {
 
 function renderPrompts() {
     const app = document.getElementById('app');
+    const renderAgents = (q = '', cat = 'All') => {
+        const term = (q || '').toLowerCase();
+        const list = AGENTS_CATALOG.filter(a => {
+            const matchCat = (cat === 'All') || a.category === cat;
+            const matchQ = !term || a.name.toLowerCase().includes(term) || a.description.toLowerCase().includes(term) || a.category.toLowerCase().includes(term);
+            return matchCat && matchQ;
+        });
+        if (!list.length) return '<div class="feature-card"><p>No agents match your query.</p></div>';
+        const iconFor = (category) => {
+            const c = (category || '').toLowerCase();
+            if (c.includes('coding')) return 'code';
+            if (c.includes('productivity')) return 'task_alt';
+            if (c.includes('design')) return 'brush';
+            if (c.includes('image')) return 'image';
+            if (c.includes('voice') || c.includes('audio')) return 'graphic_eq';
+            if (c.includes('rpa') || c.includes('automation')) return 'auto_fix_high';
+            if (c.includes('education')) return 'school';
+            if (c.includes('research')) return 'travel_explore';
+            if (c.includes('data')) return 'storage';
+            return 'widgets';
+        };
+        const cards = list.map(a => `
+            <div class="agent-card p-4 rounded-xl border shadow-sm" data-name="${a.name.replace(/\"/g,'&quot;')}">
+                <div class="agent-icon-title">
+                    <i class="material-icons agent-mi" aria-hidden="true">${iconFor(a.category)}</i>
+                    <h4 class="agent-title">${a.name}</h4>
+                </div>
+                <p class="agent-desc">${a.description}</p>
+            </div>
+        `).join('');
+        return `<div class="agents-grid">${cards}</div>`;
+    };
+    const cats = ['All', ...AGENTS_CATEGORIES];
     app.innerHTML = `
         ${buildSidebar('/prompts')}
         <div class="main-content">
             <div class="prompts-library">
                 <h1>Prompts Library</h1>
-                <div class="prompts-actions">
-                    <input type="text" placeholder="Search prompts...">
-                    <button class="new-prompt-btn">New Prompt</button>
-                </div>
-                <div class="prompt-card">
-                    <div class="prompt-info">
-                        <h3>Creative Writing Starter</h3>
-                        <p>A prompt to kickstart creative writing sessions.</p>
-                        <div class="tags">
-                            <span>creative</span>
-                            <span>writing</span>
+                <div class="prompts-actions" style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:8px">
+                    <input id="agents-search" type="text" placeholder="Search agents..." style="flex:1;min-width:220px">
+                    <div class="cat-select" style="position:relative">
+                        <button id="cat-toggle" class="new-btn" style="background:rgb(18,30,43);color:#fff;border:1px solid var(--border-color);padding:6px 10px;border-radius:6px;min-width:120px;display:flex;align-items:center;justify-content:space-between;gap:8px">
+                            <span id="cat-label">All</span>
+                            <span style="opacity:0.8">▾</span>
+                        </button>
+                        <div id="cat-menu" style="display:none;position:absolute;right:0;top:110%;z-index:2000;background:rgb(18,30,43);color:#fff;border:1px solid var(--border-color);border-radius:8px;min-width:180px;box-shadow:0 10px 22px rgba(0,0,0,0.45);overflow:hidden;">
+                            ${cats.map((c,i) => `<button class=\"cat-item\" data-val=\"${c}\" aria-selected=\"${i===0?'true':'false'}\" style=\"display:block;width:100%;text-align:left;padding:10px 12px;background:transparent;border:none;color:#fff;font-size:13px;cursor:pointer;\">${c}</button>`).join('')}
                         </div>
-                    </div>
-                    <div class="prompt-buttons">
-                        <button>Save</button>
-                        <button>Edit</button>
-                        <button>Share</button>
+                        <select id="agents-category" aria-hidden="true" style="display:none">
+                            ${cats.map(c => `<option value="${c}">${c}</option>`).join('')}
+                        </select>
                     </div>
                 </div>
-                 <div class="prompt-card">
-                    <div class="prompt-info">
-                        <h3>Technical Question</h3>
-                        <p>A prompt to ask a technical question to an AI.</p>
-                        <div class="tags">
-                            <span>technical</span>
-                            <span>qa</span>
+                <div class="feature-card">
+                    <h3 style="margin-top:0">AI Agents System Prompt Creator</h3>
+                    <aside style="background:var(--card);border:1px solid var(--border-color);border-radius:8px;padding:8px;color:var(--muted-text);margin:6px 0">💡 Generate powerful system prompts for your AI agents or LLMs.</aside>
+                    <h4>⚙️ What This Mega-Prompt Does:</h4>
+                    <ul>
+                        <li>Guides in creating a structured system prompt generation framework for AI.</li>
+                        <li>Ensures clarity and effectiveness through a detailed Chain of Thought (CoT) process.</li>
+                        <li>Provides specific instructions and negative prompting to enhance output quality and relevance.</li>
+                    </ul>
+                    <h4>💡 Tips:</h4>
+                    <ul>
+                        <li>Start by clearly defining what you are building and the specific instructions you need for your system prompt.</li>
+                        <li>Consider the expert role you want the AI to assume and the tasks it should perform.</li>
+                        <li>Ensure that your instructions are detailed and tailored to the specific needs of your project for optimal results.</li>
+                    </ul>
+                    <p style="margin:6px 0">🤖 Use the GPT: <a href="https://chatgpt.com/g/g-67af5e65918c8191bd9f91bde7472e32-ai-agents-system-prompt-generator" target="_blank">AI Agents System Prompt Generator</a></p>
+                    <h4 style="margin:10px 0 6px">🛠️ System Prompt Generator Mega-Prompt</h4>
+                    <div style="display:flex;flex-direction:column;gap:8px;width:100%">
+                        <div style="display:flex;justify-content:flex-end;gap:8px;width:100%">
+                            <button class="new-btn" id="load-sys-prompt">Load</button>
+                            <button class="new-btn" id="copy-sys-prompt">Copy</button>
+                            <button class="new-btn" id="gen-sys-prompt">Generate</button>
+                        </div>
+                        <div style="display:flex;gap:8px;align-items:flex-start;flex-wrap:wrap">
+                            <div style="display:flex;flex-direction:column;gap:6px;min-width:260px;flex:1">
+                                <input id="sys-prompt-brief" type="text" placeholder="Briefly describe what you're building..." style="width:100%;background:var(--card-bg);color:var(--text-color);border:1px solid var(--border-color);border-radius:8px;padding:8px" />
+                                <textarea id="sys-prompt" rows="18" style="flex:1;min-width:260px;width:100%;background:var(--card-bg);color:var(--text-color);border:1px solid var(--border-color);border-radius:8px;padding:10px;white-space:pre-wrap"></textarea>
+                            </div>
                         </div>
                     </div>
-                    <div class="prompt-buttons">
-                        <button>Save</button>
-                        <button>Edit</button>
-                        <button>Share</button>
-                    </div>
+                    <div id="sys-prompt-output" style="margin-top:8px;padding:10px;border:1px solid var(--border-color);border-radius:8px;background:var(--card-bg);color:var(--text-color);min-height:48px;white-space:pre-wrap"></div>
+                </div>
+                <div class="feature-card">
+                    <h3 style="margin-top:0">Agents Catalog</h3>
+                    <div id="agents-list" style="margin-top:8px">${renderAgents()}</div>
+                </div>
+                <div class="feature-card" id="agents-category-panel" style="display:none;">
+                    <h3 style="margin-top:0">Agents in “<span id="agents-cat-name">All</span>”</h3>
+                    <div id="agents-cat-results" style="margin-top:8px"></div>
                 </div>
             </div>
         </div>
+        <style>
+            .agents-grid { display:grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap:12px; }
+            .agent-card { border:1px solid var(--card-border); border-radius:12px; padding:16px; background: var(--card); box-shadow: 0 2px 8px rgba(0,0,0,0.15); }
+            .agent-card:hover { outline: 2px solid var(--icon-accent); }
+            .agent-icon-title { display:flex; align-items:center; gap:10px; }
+            .agent-mi { font-size:22px; line-height:1; color: var(--icon-accent); }
+            .agent-title { margin:0; font-size:18px; font-weight:600; color: var(--text); }
+            .agent-desc { margin:10px 0 0 0; color: var(--muted-text); font-size:14px; line-height:1.5; }
+            .agent-repo a { font-size:12px; color: var(--text); opacity:0.9; }
+            /* Custom category dropdown (dark themed) */
+            .cat-select .cat-item:hover { background: color-mix(in srgb, var(--icon-accent) 18%, transparent); }
+            .cat-select .cat-item[aria-selected="true"] { background: color-mix(in srgb, var(--icon-accent) 28%, transparent); font-weight:600; }
+        </style>
     `;
+    const search = document.getElementById('agents-search');
+    const sel = document.getElementById('agents-category');
+    const list = document.getElementById('agents-list');
+    const rerender = () => { list.innerHTML = renderAgents(search.value, 'All'); };
+    if (search) search.addEventListener('input', debounce(rerender, 200));
+    // Populate a separate panel when category changes
+    const panel = document.getElementById('agents-category-panel');
+    const panelName = document.getElementById('agents-cat-name');
+    const panelBody = document.getElementById('agents-cat-results');
+    const iconFor = (category) => {
+        const c = (category || '').toLowerCase();
+        if (c.includes('coding')) return 'code';
+        if (c.includes('productivity')) return 'task_alt';
+        if (c.includes('design')) return 'brush';
+        if (c.includes('image')) return 'image';
+        if (c.includes('voice') || c.includes('audio')) return 'graphic_eq';
+        if (c.includes('rpa') || c.includes('automation')) return 'auto_fix_high';
+        if (c.includes('education')) return 'school';
+        if (c.includes('research')) return 'travel_explore';
+        if (c.includes('data')) return 'storage';
+        return 'widgets';
+    };
+    function renderCategoryPanel(cat) {
+        if (!panel || !panelBody || !panelName) return;
+        if (!cat || key(cat) === key('All')) {
+            panel.style.display = 'none';
+            panelBody.innerHTML = '';
+            if (panelName) panelName.textContent = 'All';
+            return;
+        }
+        const items = AGENTS_CATALOG.filter(a => key(a.category) === key(cat));
+        panelName.textContent = cat;
+        if (!items.length) {
+            panelBody.innerHTML = '<p class="muted" style="color:var(--muted-text)">No agents in this category.</p>';
+            panel.style.display = 'block';
+            notify(`0 agents in ${cat}`);
+            return;
+        }
+        panelBody.innerHTML = items.map(a => `
+            <div class="agent-row" style="display:flex;align-items:flex-start;gap:10px;padding:8px 0;border-top:1px solid var(--card-border)">
+                <i class="material-icons" style="color:var(--icon-accent)">${iconFor(a.category)}</i>
+                <div style="flex:1">
+                    <div style="font-weight:600;color:var(--text)">${a.name}</div>
+                    <div style="color:var(--muted-text);font-size:13px">${a.description}</div>
+                </div>
+            </div>
+        `).join('');
+        // Remove top border on first row
+        const first = panelBody.querySelector('.agent-row');
+        if (first) first.style.borderTop = 'none';
+        panel.style.display = 'block';
+        notify(`${items.length} agent${items.length===1?'':'s'} in ${cat}`);
+    }
+    if (sel) sel.addEventListener('change', () => {
+        const lab = document.getElementById('cat-label');
+        if (lab) lab.textContent = sel.value || 'All';
+        renderCategoryPanel(sel.value);
+    });
+    // Custom dropdown wiring
+    const catToggle = document.getElementById('cat-toggle');
+    const catMenu = document.getElementById('cat-menu');
+    if (catToggle && catMenu) {
+        const closeMenu = () => { catMenu.style.display = 'none'; };
+        const openMenu = () => { catMenu.style.display = 'block'; };
+        catToggle.addEventListener('click', (e) => {
+            e.preventDefault();
+            catMenu.style.display = (catMenu.style.display === 'block') ? 'none' : 'block';
+        });
+        catMenu.addEventListener('click', (e) => {
+            const btn = e.target && e.target.closest ? e.target.closest('.cat-item') : null;
+            if (!btn) return;
+            const val = btn.getAttribute('data-val') || 'All';
+            if (sel) {
+                sel.value = val;
+                // Update visual selection
+                catMenu.querySelectorAll('.cat-item').forEach(it => it.setAttribute('aria-selected', it === btn ? 'true' : 'false'));
+                // Dispatch change on hidden select and render panel directly
+                sel.dispatchEvent(new Event('change'));
+                renderCategoryPanel(val);
+            }
+            closeMenu();
+            try { catToggle.focus(); } catch {}
+        });
+        // Basic keyboard navigation for the menu
+        catMenu.addEventListener('keydown', (e) => {
+            const items = Array.from(catMenu.querySelectorAll('.cat-item'));
+            if (!items.length) return;
+            const current = items.findIndex(it => it.getAttribute('aria-selected') === 'true');
+            let next = current;
+            if (e.key === 'ArrowDown') { next = (current + 1) % items.length; e.preventDefault(); }
+            else if (e.key === 'ArrowUp') { next = (current - 1 + items.length) % items.length; e.preventDefault(); }
+            else if (e.key === 'Enter') {
+                const btn = items[current>=0?current:0];
+                if (btn) btn.click();
+                return;
+            } else if (e.key === 'Escape') { closeMenu(); try { catToggle.focus(); } catch {}; return; }
+            items.forEach((it, idx) => it.setAttribute('aria-selected', idx === next ? 'true' : 'false'));
+            if (items[next]) items[next].focus();
+        });
+        document.addEventListener('click', (e) => {
+            if (!catMenu.contains(e.target) && e.target !== catToggle && !catToggle.contains(e.target)) closeMenu();
+        });
+    }
+    // Populate the System Prompt textarea and wire buttons
+    const ta = document.getElementById('sys-prompt');
+    if (ta) ta.value = '';
+    const loadBtn = document.getElementById('load-sys-prompt');
+    if (loadBtn) loadBtn.addEventListener('click', () => { const t=document.getElementById('sys-prompt'); if (t) t.value = SYSTEM_MEGA_PROMPT; });
+    const copyBtn = document.getElementById('copy-sys-prompt');
+    if (copyBtn) copyBtn.addEventListener('click', async () => {
+        try {
+            const t = document.getElementById('sys-prompt');
+            const v = t && t.value ? t.value : '';
+            await navigator.clipboard.writeText(v);
+            if (typeof window.toast === 'function') window.toast('Copied');
+        } catch {
+            try { if (typeof window.toast === 'function') window.toast('Copy failed', 'error'); } catch {}
+        }
+    });
+    const genBtn = document.getElementById('gen-sys-prompt');
+    if (genBtn) genBtn.addEventListener('click', async () => {
+        const briefEl = document.getElementById('sys-prompt-brief');
+        const outEl = document.getElementById('sys-prompt-output');
+        const brief = briefEl && briefEl.value ? briefEl.value.trim() : '';
+        if (!brief) {
+            if (typeof window.toast === 'function') window.toast('Please enter a brief first');
+            return;
+        }
+        if (outEl) outEl.textContent = 'Generating...';
+        try {
+            const res = await fetch('/api/mini/generate', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ system: (typeof SYSTEM_MEGA_PROMPT !== 'undefined' ? SYSTEM_MEGA_PROMPT : ''), prompt: brief, temperature: 0.5, max_tokens: 800 })
+            });
+            if (!res.ok) {
+                const txt = await res.text();
+                throw new Error('HTTP ' + res.status + ': ' + txt);
+            }
+            const json = await res.json();
+            const text = json && json.data && json.data.text ? json.data.text : '';
+            if (outEl) outEl.textContent = text || '(empty)';
+        } catch (e) {
+            const msg = e && e.message ? e.message : 'Unknown';
+            if (outEl) outEl.textContent = 'Error: ' + msg;
+            // Offer quick guidance if Ollama not running or model missing
+            const hintNeeded = /ECONNREFUSED|ollama|fetch failed|ENOTFOUND|HTTP 5\d{2}/i.test(msg);
+            if (hintNeeded) {
+                const ok = window.confirm('Local model may be missing or Ollama is not running.\n\nInstall Phi-3 Mini now? This will require:\n  1) Running Ollama\n  2) Downloading ~2GB model (phi3:mini)');
+                if (ok) {
+                    const help = 'Steps:\n1) Start Ollama: ollama serve\n2) Pull model: ollama pull phi3:mini';
+                    try { await navigator.clipboard.writeText('ollama pull phi3:mini'); } catch {}
+                    alert(help + '\n\nThe command `ollama pull phi3:mini` has been copied to your clipboard.');
+                }
+            }
+        }
+    });
 }
 
 function renderToolbox() {

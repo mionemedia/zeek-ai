@@ -8,6 +8,59 @@
     --accent: #4DABF7;
     --accent-weak: #23364B;
     --danger: #EF4444;
+    --borderColor-default: #2E3D52;
+    --color-border-default: #2E3D52;
+  /* App icon accent color (dark mode default) */
+  --icon-accent: #049499;
+}
+
+@media (prefers-color-scheme: light) {
+  :root { --icon-accent: #5DE2E7; }
+}
+
+/* User-forced theme overrides (ignore OS when set) */
+html[data-theme="dark"] {
+  --icon-accent: #049499;
+}
+html[data-theme="light"] {
+  --icon-accent: #5DE2E7;
+}
+
+/* Apply accent color to app icons (Material Icons, generic icons). Text remains white via existing rules. */
+.material-icons,
+.icon,
+.agent-mi,
+.sidebar-nav i.material-icons,
+.conv-actions i.material-icons {
+  color: var(--icon-accent) !important;
+}
+
+/* Do NOT recolor provider logo images (LM provider icons) */
+img.provider-icon { filter: none !important; }
+
+/* Global dropdown theme (applies to all select elements across the app) */
+select,
+.prompts-actions select,
+.playground-sidebar select,
+.online-filters select {
+    background: rgb(18, 30, 43) !important;
+    color: #ffffff !important;
+    border: 1px solid var(--card-border);
+    border-radius: 8px;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+}
+
+select:focus {
+    outline: 2px solid var(--accent);
+    outline-offset: 0;
+}
+
+/* Dropdown list popup coloring (supported in most browsers/OS themes) */
+select option {
+    background: rgb(18, 30, 43);
+    color: #ffffff;
 }
 
 body {
@@ -33,9 +86,12 @@ body {
 }
 
 .main-content {
+    display: flex; /* ensure sidebar content columns layout */
     flex-grow: 1;
     padding: 40px;
     overflow-y: auto;
+    min-height: 100vh; /* stretch to viewport height so absolute children can anchor bottom */
+    align-items: stretch;
 }
 
 .logo {
@@ -625,6 +681,8 @@ body {
     border-right: 1px solid var(--card-border);
     background: var(--card);
     padding: 12px;
+    border-radius: 10px; /* rounded corners */
+    overflow: hidden; /* ensure inner hover backgrounds respect rounding */
 }
 
 .conv-toolbar {
@@ -662,11 +720,12 @@ body {
     color: var(--text);
 }
 
-.chat-main { 
-    flex:1; 
-    position: relative; 
-    padding: 24px; 
-    padding-bottom: 110px; 
+.chat-main {
+    flex: 1;
+    position: relative;
+    padding: 24px;
+    padding-bottom: 110px;
+    min-height: calc(100vh - 80px); /* account for main-content padding */
 }
 
 .chat-empty {
@@ -686,16 +745,17 @@ body {
     opacity: 0.9;
 }
 
-.composer { 
-    position: absolute; 
-    left: 24px; 
-    right: 24px; 
-    bottom: 16px; 
-    background: var(--card); 
-    border: 1px solid var(--card-border); 
-    border-radius: 12px; 
-    padding: 8px 10px; 
-    box-shadow: 0 8px 20px rgba(0,0,0,0.35); 
+.composer {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    bottom: 16px;
+    width: min(760px, calc(100% - 48px)); /* centered, responsive */
+    background: var(--card);
+    border: 1px solid var(--card-border);
+    border-radius: 12px;
+    padding: 8px 10px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.35);
 }
 
 /* Scrollable chat area above the bottom bar */

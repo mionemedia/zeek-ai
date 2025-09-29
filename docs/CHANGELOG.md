@@ -8,6 +8,8 @@ All notable changes to this project will be documented here.
 
 - Unify sidebars across pages using global `buildSidebar()` to keep navigation consistent.
 
+- Split Chats: keep the split chats window as a placeholder for a potential future feature (not part of the original app).
+
 ## [0.1.2] - 2025-09-15
 
 ### Fixed
